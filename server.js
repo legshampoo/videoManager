@@ -1,44 +1,45 @@
+require('dotenv').config({ path: 'variables.env' });
+
 const express = require('express');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
 
 const app = express();
-const config = require('./webpack.config.js');
-const compiler = webpack(config);
 
-// Tell express to use the webpack-dev-middleware and use the webpack.config.js
-// configuration file as a base.
-// app.use(webpackDevMiddleware(compiler, {
-//   publicPath: config.output.publicPath,
-//   hot: true,
-//   filename: 'bundle.js',
-//   stats: {
-//     colors: true,
-//   },
-//   historyApiFallback: true
-// }));
+const DEFAULT_PORT = 3000;
 
+const env = process.env.NODE_ENV || 'NOT DEFINED';
 
-app.use(webpackDevMiddleware(compiler, {
-  hot: true,
-  publicPath: config.output.publicPath,
-  contentBase: './dist'
-}));
+app.set("port", process.env.PORT || DEFAULT_PORT);
+app.use(express.static('client/dist'));
 
-// app.use(webpackHotMiddleware)(compiler, {
-//   log: console.log,
-//   path: '/__webpack_hmr',
-//   heartbeat: 10*1000,
-// });
+if(env == 'development'){
+  console.log('Sever running in DEVELOPMENT MODE');
 
-app.use(webpackHotMiddleware(compiler));
+  const webpack = require('webpack');
+  const webpackDevMiddleware = require('webpack-dev-middleware');
+  const webpackHotMiddleware = require('webpack-hot-middleware');
+  const config = require('./webpack.config.dev.js');
+  const compiler = webpack(config);
+
+  app.use(webpackDevMiddleware(compiler, {
+    hot: true,
+    publicPath: config.output.publicPath,
+    contentBase: './dist',
+    stats: {
+      colors: true
+    }
+  }));
+
+  app.use(webpackHotMiddleware(compiler));
+
+}else{
+  console.log('Server running in PRODUCTION MODE');
+}
+
+app.get('*', (req, res) => {
+  res.sendFile(__dirname + '/client/dist/index.html');
+})
 
 // Serve the files on port 3000.
-app.listen(3000, function () {
-  console.log('Example app listening on portz 3000!\n');
-});
-
-process.once('SIGUSR2', function(){
-  process.kill(process.pid, 'SIGUSR2');
+app.listen(app.get('port'), function () {
+  console.log('Example app listening on port ' + app.get('port') + '!\n');
 });

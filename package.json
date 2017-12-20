@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start:dev": "nodemon server.js",
-    "start:build": "webpack"
+    "start:dev": "NODE_ENV=development nodemon server.js",
+    "start:prod": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors && NODE_ENV=production node server.js",
+    "build": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors",
+    "start:forever": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors && NODE_ENV=production forever start server.js"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +30,8 @@
     "webpack-hot-middleware": "^2.21.0"
   },
   "dependencies": {
+    "dotenv": "^4.0.0",
+    "forever": "^0.15.3",
     "html-loader": "^0.5.1",
     "lodash": "^4.17.4",
     "react": "^16.2.0",
