@@ -7,7 +7,7 @@
     "start:dev": "NODE_ENV=development nodemon server.js",
     "start:prod": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors && NODE_ENV=production node server.js",
     "build": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors",
-    "start:forever": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors && NODE_ENV=production forever start server.js"
+    "start:forever": "NODE_ENV=production webpack --config=webpack.config.prod.js --progress --colors && NODE_ENV=production forever server.js"
   },
   "author": "",
   "license": "ISC",
