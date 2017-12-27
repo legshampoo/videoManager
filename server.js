@@ -1,8 +1,11 @@
 require('dotenv').config({ path: 'variables.env' });
 const path = require('path');
 const express = require('express');
+const historyApiFallback = require('connect-history-api-fallback');
 
 const app = express();
+
+const routes = require('./server/routes/index');
 
 const DEFAULT_PORT = 3000;
 
@@ -10,7 +13,6 @@ const env = process.env.NODE_ENV || 'NOT DEFINED';
 
 app.set("port", process.env.PORT || DEFAULT_PORT);
 app.use(express.static(path.join(__dirname, '/client/dist')));
-// app.use(express.static('public'));
 
 if(env == 'development'){
   console.log("================================================>")
@@ -22,11 +24,13 @@ if(env == 'development'){
   const config = require('./webpack.config.dev.js');
   const compiler = webpack(config);
 
+  app.use(historyApiFallback({
+    verbose: false
+  }));
+
   app.use(webpackDevMiddleware(compiler, {
     hot: true,
     publicPath: config.output.publicPath,
-    // contentBase: '/',
-    // historyApiFallback: true,
     chunks: false,
     'errors-only': true,
     stats: {
@@ -42,11 +46,16 @@ if(env == 'development'){
   console.log('Server running in PRODUCTION MODE');
 }
 
+app.use('/api', routes);
+// app.use('/api', (req, res) => {
+//   console.log('in server')
+// })
+
 app.get('*', (req, res) => {
   console.log('got request');
   // console.log(req);
-  // var clientHostname = req.headers.host;
-  // console.log('Hostname: ' + clientHostname);
+  var clientHostname = req.headers.host;
+  console.log('Hostname: ' + clientHostname);
   res.sendFile(__dirname + '/client/dist/index.html');
 });
 
