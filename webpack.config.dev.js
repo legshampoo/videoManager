@@ -7,17 +7,33 @@ module.exports = {
   entry: {
     app: [
       'webpack-hot-middleware/client',
-      './client/public/index.js',
+      './client/public/index.js'
     ]
   },
-  //do we not need this because using HMR????
-  // output: {
-  //   filename: 'bundle.js',
-  //   path: path.resolve(__dirname, 'client/dist'),
-  //   publicPath: '/'
-  // },
+
+  output: {
+    path: path.resolve(__dirname, 'client/dist'),
+    filename: 'bundle.js',
+    publicPath: '/'
+  },
+
+  devServer: {
+    contentBase: path.resolve(__dirname, 'client/dist')
+  },
 
   devtool: 'inline-source-map',
+
+  plugins: [
+    new CleanWebpackPlugin(['client/dist']),
+    new HtmlWebpackPlugin({
+      template: './client/public/index.html',
+      filename: 'index.html',
+      inject: 'body'
+    }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ],
 
   module: {
     loaders: [
@@ -48,17 +64,5 @@ module.exports = {
         loader: 'url-loader'
       }
     ]
-  },
-
-  plugins: [
-    new CleanWebpackPlugin(['client/dist']),
-    new HtmlWebpackPlugin({
-      template: './client/public/index.html',
-      filename: 'index.html',
-      inject: 'body'
-    }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ]
+  }
 };

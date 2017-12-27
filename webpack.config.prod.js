@@ -4,17 +4,29 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
-  entry: {
-    app: [
-      './client/public/index.js',
-    ]
-  },
+  // entry: {
+  //   app: [
+  //     './client/public/index.js',
+  //   ]
+  // },
+  entry: path.resolve(__dirname +'/client/public/index.js'),
 
   output: {
+    path: path.resolve(__dirname + '/client/dist'),
     filename: 'bundle.js',
-    path: path.resolve(__dirname, 'client/dist'),
     publicPath: '/'
   },
+
+  plugins: [
+    new CleanWebpackPlugin([path.resolve(__dirname + '/client/dist')]),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname + '/client/public/index.html'),
+      filename: 'index.html',
+      inject: 'body'
+    }),
+    new webpack.NamedModulesPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
+  ],
 
   module: {
     loaders: [
@@ -45,16 +57,5 @@ module.exports = {
         loader: 'url-loader'
       }
     ]
-  },
-
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-    new HtmlWebpackPlugin({
-      template: './client/public/index.html',
-      filename: 'index.html',
-      inject: 'body'
-    }),
-    new webpack.NamedModulesPlugin(),
-    new webpack.NoEmitOnErrorsPlugin()
-  ]
+  }
 };

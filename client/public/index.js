@@ -1,14 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/App.js';
+// import App from './components/App.js';
 
+import RootContainer from './root.js';
 var rootEl = document.getElementById('root');
 
-ReactDOM.render(<App />, rootEl);
+const RootRender = (Component) => {
+  ReactDOM.render(
+    <Component />,
+    rootEl
+  );
+}
+
+RootRender(RootContainer);
 
 if(module.hot){
-  module.hot.accept(App, function (){
-    var NextApp = App;
-    ReactDOM.render(<NextApp />, rootEl);
-  });
+  module.hot.accept('./root.js', () => {
+    const NextRootContainer = require('./root.js').default;
+    RootRender(NextRootContainer);
+  })
 }
