@@ -8,6 +8,7 @@ import {
 import Home from './Home';
 import Login from './Login';
 import DeviceLogin from './DeviceLogin';
+import DeviceHome from './DeviceHome';
 import RegisterDevice from './RegisterDevice';
 import NotFound from './NotFound';
 
@@ -18,9 +19,10 @@ class App extends React.Component {
       <div>
         <Switch>
           <Route exact path='/' component={Home} />
-          <Route exact path='/login' component={Login} />
-          <Route exact path='/device-login' component={DeviceLogin} />
-          <Route exact path='/device-register' component={RegisterDevice} />
+          <Route exact path='/dashboard/login' component={Login} />
+          <Route exact path='/device/login' component={DeviceLogin} />
+          <Route exact path='/device/:uuid' component={DeviceHome} />
+          <Route exact path='/device/new-uuid' component={RegisterDevice} />
           <Route component={NotFound} />
         </Switch>
       </div>)

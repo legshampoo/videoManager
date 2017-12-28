@@ -10,11 +10,11 @@ export default class VideoPlayer extends React.Component {
     this.state = {
       paused: true
     };
-  },
+  }
 
   play(){
     console.log('play');
-  },
+  }
 
   render(){
     return (

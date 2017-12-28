@@ -5,14 +5,19 @@ import {
   Switch
 } from 'react-router-dom';
 
+import { Provider } from 'react-redux';
+import store from './store/store';
+
 import App from './components/App';
 
 class AppRouter extends Component {
   render(){
     return(
-      <Router>
-        <App />
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <App />
+        </Router>
+      </Provider>
     )
   }
 }

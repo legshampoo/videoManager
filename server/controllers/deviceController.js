@@ -4,7 +4,7 @@ const idLength = 8;
 var deviceController = {
 
   registerDevice(req, res){
-    console.log('/assign-device-uuid');
+    console.log('/request-new-uuid');
 
     var shortId = new ShortUniqueId();
 

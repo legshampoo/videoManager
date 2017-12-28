@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+
 // import styles from '../css/app.css';
-import axios from 'axios';
+import { requestUUID } from '../actions/deviceActions';
 
 class RegisterDevice extends Component {
   constructor(props){
@@ -12,40 +16,34 @@ class RegisterDevice extends Component {
   }
 
   componentDidMount(){
-    this.checkUUID();
+    this.requestUUID();
   }
 
-  checkUUID(){
-    console.log('One last check for UUID before creating a new one');
-
-    var uuid = localStorage.getItem('uuid');
-
-    console.log('the uuid is: ', uuid);
-
-    if(uuid == null || uuid == undefined || uuid == ''){
-      console.log('creat uuid here');
-
-      axios.post('/api/assign-device-uuid', {
-        testData: 'data-here'
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-
-    }else{
-      console.log('uuid actually exists, handle it here');
-    }
+  requestUUID(){
+    this.props.requestUUID();
   }
 
   render(){
     return (
       <div>
-        Register Device
+        Device has been registered!<br />
+        VERY IMPORTANT: <br />
+        Please write down the device id, then reboot the device and sign in to your control panel to activate<br />
+        <h1>id: {this.props.device.uuid}</h1>
       </div>)
   }
 }
 
-export default RegisterDevice;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    device: state.device
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    requestUUID: bindActionCreators(requestUUID, dispatch)
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterDevice);
