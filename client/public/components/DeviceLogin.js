@@ -30,9 +30,10 @@ class DeviceLogin extends Component {
       //if the UUID is not found
       console.log('No UUID found, redirecting to register device page');
       //push to the new-uuid page
-      this.props.history.push('/device/new-uuid');
+      this.props.history.push('/device/register/new-uuid');
     }else{
       //take uuid saved in localStorage and store it to redux state
+      console.log('UUID FOUND, proceeding to device home screen');
       this.props.updateUUID(uuid);
     }
   }

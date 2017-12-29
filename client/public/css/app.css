@@ -5,6 +5,7 @@
 
 html {
   height: 100vh;
+  color: white;
 }
 
 body {
@@ -23,7 +24,7 @@ body {
   background-color: black;
   /*position: relative;*/
   overflow: hidden;
-  color: white;
+  /* color: white; */
 }
 
 .container {

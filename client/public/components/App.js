@@ -22,7 +22,7 @@ class App extends React.Component {
           <Route exact path='/dashboard/login' component={Login} />
           <Route exact path='/device/login' component={DeviceLogin} />
           <Route exact path='/device/:uuid' component={DeviceHome} />
-          <Route exact path='/device/new-uuid' component={RegisterDevice} />
+          <Route exact path='/device/register/new-uuid' component={RegisterDevice} />
           <Route component={NotFound} />
         </Switch>
       </div>)

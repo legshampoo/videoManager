@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 
 import styles from '../css/app.css';
-import Video from '../vid/cells4.mp4';
+// import Video from '../vid/cells4.mp4';
+import Video from '../vid/motion_template.mp4';
 
 export default class VideoPlayer extends React.Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      paused: true
-    };
   }
 
-  play(){
-    console.log('play');
+  componentDidMount(){
+    console.log('videoplayer mounted');
   }
 
   render(){
