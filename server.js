@@ -1,18 +1,59 @@
 require('dotenv').config({ path: 'variables.env' });
 const path = require('path');
 const express = require('express');
+const bodyParser = require('body-parser');
+const expressValidator = require('express-validator');  //middleware used for validating data before entering into mongodb
 const historyApiFallback = require('connect-history-api-fallback');
+
+// const session = require('express-session');  //manages sessions
+const mongoose = require('mongoose');  //interface for mongodb
+const passport = require('passport');
+const session = require('express-session');
+// const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 
+const DEFAULT_PORT = 3000;
+const env = process.env.NODE_ENV || 'NOT DEFINED';
+app.set("port", process.env.PORT || DEFAULT_PORT);
+
+//import our models
+// THIS NEEDS TO BE BEFORE ROUTES, otherwise it won't be imported
+require('./server/models/Device');
+require('./server/models/User');
+require('./server/handlers/passport');
+
+//this needs to come AFTER model imports
 const routes = require('./server/routes/index');
 
-const DEFAULT_PORT = 3000;
-
-const env = process.env.NODE_ENV || 'NOT DEFINED';
-
-app.set("port", process.env.PORT || DEFAULT_PORT);
 app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+//this needs to be before passport.session
+app.use(session({
+  secret: 'session-secret'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(expressValidator());  //for validating data before mongo entry, applies the methods to all requests, you just call ie req.sanitize('name')
+app.use('/api', routes);
+
+
+// mongoose.connect(process.env.DATABASE);
+mongoose.Promise = global.Promise;  //tell mongoose to use ES6 promises
+mongoose.connect(process.env.DATABASE, {})
+.then(() => {
+  console.log('Conected to MongoDB');
+})
+.catch(err => {
+  console.log(err);
+});
+
+mongoose.connection.on('error', (err) => {
+  console.log('Mongoose connection error', err.message);
+});
 
 if(env == 'development'){
   console.log("================================================>")
@@ -45,11 +86,6 @@ if(env == 'development'){
 }else{
   console.log('Server running in PRODUCTION MODE');
 }
-
-app.use('/api', routes);
-// app.use('/api', (req, res) => {
-//   console.log('in server')
-// })
 
 app.get('*', (req, res) => {
   console.log('got request');

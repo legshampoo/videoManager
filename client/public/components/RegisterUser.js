@@ -1,11 +1,11 @@
 import React from 'react';
-// import styles from '../css/app.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+// import styles from '../css/app.css';
 
-import LoginForm from './LoginForm';
+import RegisterUserForm from './RegisterUserForm';
 
-class Login extends React.Component {
+class RegisterUser extends React.Component {
   constructor(props){
     super(props);
   }
@@ -14,9 +14,11 @@ class Login extends React.Component {
     if(this.props != nextProps){
       console.log('new props');
       this.props = nextProps;
+      // console.log()
       if(this.props.user.authorized){
-        console.log('User is authed');
+        console.log('yees authed');
         this.props.history.push('/dashboard/home');
+        // this.props.history.push('/device/register/new-uuid');
       }
     }
   }
@@ -24,14 +26,13 @@ class Login extends React.Component {
   render(){
     return (
       <div>
-        Login
-        <LoginForm />
+        Register User
+        <RegisterUserForm />
       </div>)
   }
 }
 
-// export default Login;
-
+// export default RegisterUser;
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -46,4 +47,4 @@ const mapDispatchToProps = dispatch => {
 }
 
 // export default LoginForm;
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterUser);

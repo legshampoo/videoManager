@@ -2,24 +2,15 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-
-// import styles from '../css/app.css';
 import { requestUUID } from '../actions/deviceActions';
 
 class RegisterDevice extends Component {
   constructor(props){
     super(props);
-
-    this.state = {
-      uuid: ''
-    };
   }
 
   componentDidMount(){
-    this.requestUUID();
-  }
-
-  requestUUID(){
+    console.log('Registering Device with new UUID');
     this.props.requestUUID();
   }
 
