@@ -2,7 +2,10 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+
 // import styles from '../css/app.css';
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 import { userRegister } from '../actions/userActions';
 
@@ -46,38 +49,35 @@ class RegisterUserForm extends React.Component {
   render(){
     return (
       <div>
-        Sign Up Form
         <form onSubmit={this.handleSubmit}>
           <h1>Register!</h1>
-          Name:
-          <input
-            type="text"
-            name="name"
+          <TextField
+            name='name'
+            floatingLabelText='Name'
             value={this.state.name}
             onChange={this.handleChange} />
             <br />
-          Email:
-          <input
-            type="text"
-            name="email"
+          <TextField
+            name='email'
+            floatingLabelText='Email'
             value={this.state.email}
             onChange={this.handleChange} />
             <br />
-          Password:
-          <input
-            type="password"
-            name="password"
+          <TextField
+            name='password'
+            floatingLabelText='Password'
             value={this.state.password}
             onChange={this.handleChange} />
-          <br />
-          Confirm Password:
-          <input
-            type="password"
-            name="passwordConfirm"
+            <br />
+          <TextField
+            name='passwordConfirm'
+            floatingLabelText='PasswordConfirm'
             value={this.state.passwordConfirm}
             onChange={this.handleChange} />
-          <br />
-          <input type='submit' value='Submit' />
+            <br />
+          <RaisedButton
+            label='Register'
+            type='submit' />
         </form>
       </div>)
   }
@@ -85,7 +85,7 @@ class RegisterUserForm extends React.Component {
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    // user: state.user
+
   }
 }
 
@@ -95,5 +95,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-// export default LoginForm;
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterUserForm);

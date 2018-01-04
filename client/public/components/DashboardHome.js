@@ -1,9 +1,23 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink
+} from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
 
+// import styles from '../css/app.css';
+import AppBar from 'material-ui/AppBar';
+import DropDownMenu from 'material-ui/DropDownMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconMenu from 'material-ui/IconMenu';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import MenuIcon from 'material-ui/svg-icons/navigation/menu';
+
+import UploadVideo from './UploadVideo';
+import DeviceManagement from './DeviceManagement';
 import LogoutForm from './LogoutForm';
 
 class DashboardHome extends React.Component {
@@ -13,36 +27,57 @@ class DashboardHome extends React.Component {
 
   componentDidMount(){
     if(!this.props.user.authorized){
-      console.log('User NOT AUTHORIZED');
+      console.log('User NOT AUTHORIZED, redirect to login page');
       this.props.history.push('/dashboard/login');
     }else{
-      console.log('User is authorized yay');
+      console.log('User is Authorized');
     }
   }
 
   componentWillReceiveProps(nextProps){
     if(this.props != nextProps){
-      console.log('new props');
       this.props = nextProps;
-      // console.log()
       if(!this.props.user.authorized){
-        console.log('not authorized');
-        this.props.history.push('/');
-        // this.props.history.push('/device/register/new-uuid');
+        console.log('Unauthorized, redirect to login page');
+        this.props.history.push('/dashboard/login');
       }
     }
   }
+
+  handleClick_dropDown(event, path, value){
+    console.log(this.props.match.path);
+    console.log('path: ', path);
+    this.props.history.push('/dashboard/home/' + path);
+  }
+
   render(){
     return (
       <div>
-        Dashboard Home <br />
-        <LogoutForm />
-        {/* user: {this.props.user.email}         */}
+        <AppBar
+          title='Dashboard'
+          showMenuIconButton={false}
+          iconClassNameRight='muidocs-icon-naviagtion-expand-more'>
+          <IconMenu
+            iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            onChange={(e, path, value) => this.handleClick_dropDown(e, path, value)}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}>
+            <MenuItem
+              primaryText='Upload'
+              value='upload' />
+            <MenuItem
+              primaryText='Devices'
+              value='devices' />
+          </IconMenu>
+          Name: {this.props.user.data.name} <br />
+          Email: {this.props.user.data.email} <br />
+          <LogoutForm />
+        </AppBar>
+        <Route exact path={`${this.props.match.path}/upload`} component={UploadVideo} />
+        <Route exact path={`${this.props.match.path}/devices`} component={DeviceManagement} />
       </div>)
   }
 }
-
-// export default DashboardHome;
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -52,9 +87,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // userRegister: bindActionCreators(userRegister, dispatch)
+
   }
 }
 
-// export default LoginForm;
 export default connect(mapStateToProps, mapDispatchToProps)(DashboardHome);

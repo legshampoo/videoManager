@@ -5,7 +5,7 @@
 
 html {
   height: 100vh;
-  color: white;
+  /* color: white; */
 }
 
 body {
@@ -14,7 +14,8 @@ body {
   height: 100vh;
   margin: 0px;
   padding: 0px;
-  background-color: black;
+  background-color: white;
+  font-family: 'Roboto', sans-serif;
 }
 
 .app {

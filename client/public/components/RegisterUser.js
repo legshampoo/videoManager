@@ -14,11 +14,10 @@ class RegisterUser extends React.Component {
     if(this.props != nextProps){
       console.log('new props');
       this.props = nextProps;
-      // console.log()
+
       if(this.props.user.authorized){
         console.log('yees authed');
         this.props.history.push('/dashboard/home');
-        // this.props.history.push('/device/register/new-uuid');
       }
     }
   }
@@ -26,13 +25,10 @@ class RegisterUser extends React.Component {
   render(){
     return (
       <div>
-        Register User
         <RegisterUserForm />
       </div>)
   }
 }
-
-// export default RegisterUser;
 
 const mapStateToProps = (state, ownProps) => {
   return {
@@ -42,9 +38,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // userRegister: bindActionCreators(userRegister, dispatch)
+
   }
 }
 
-// export default LoginForm;
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterUser);

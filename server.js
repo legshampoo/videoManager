@@ -40,8 +40,6 @@ app.use(passport.session());
 app.use(expressValidator());  //for validating data before mongo entry, applies the methods to all requests, you just call ie req.sanitize('name')
 app.use('/api', routes);
 
-
-// mongoose.connect(process.env.DATABASE);
 mongoose.Promise = global.Promise;  //tell mongoose to use ES6 promises
 mongoose.connect(process.env.DATABASE, {})
 .then(() => {
@@ -56,8 +54,11 @@ mongoose.connection.on('error', (err) => {
 });
 
 if(env == 'development'){
+  console.log('\n \n \n');
   console.log("================================================>")
+  console.log('\n \n \n')
   console.log('Sever running in DEVELOPMENT MODE');
+  console.log('\n \n \n')
 
   const webpack = require('webpack');
   const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -84,18 +85,20 @@ if(env == 'development'){
   }));
 
 }else{
+  console.log('\n \n \n');
+  console.log("================================================>")
+  console.log('\n \n \n')
   console.log('Server running in PRODUCTION MODE');
+  console.log('\n \n \n');
 }
 
 app.get('*', (req, res) => {
   console.log('got request');
-  // console.log(req);
   var clientHostname = req.headers.host;
   console.log('Hostname: ' + clientHostname);
   res.sendFile(__dirname + '/client/dist/index.html');
 });
 
-// Serve the files on port 3000.
 app.listen(app.get('port'), function () {
   console.log('Example app listening on port ' + app.get('port') + '!\n');
 });

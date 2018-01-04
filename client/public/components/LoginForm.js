@@ -2,7 +2,9 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
+
+import RaisedButton from 'material-ui/RaisedButton';
+import TextField from 'material-ui/TextField';
 
 import { userLogin } from '../actions/userActions';
 
@@ -42,34 +44,34 @@ class LoginForm extends React.Component {
   render(){
     return (
       <div>
-        Login Form
         <form onSubmit={this.handleSubmit}>
-          <h1>Sign In</h1>
-          Email:
-          <input
-            type="text"
-            name="email"
+          <h1>Log In</h1>
+          <TextField
+            name='email'
+            floatingLabelText='Email'
             value={this.state.email}
             onChange={this.handleChange} />
             <br />
-          Password:
-          <input
-            type="password"
-            name="password"
+          <TextField
+            type='password'
+            name='password'
+            floatingLabelText='Password'
             value={this.state.password}
             onChange={this.handleChange} />
           <br />
-          <input type='submit' value='Submit' />
+          <RaisedButton
+            label='Sign In'
+            type='submit' />
         </form>
-
-        <NavLink to='/dashboard/register'>Sign Up!</NavLink>
+        <br />
+        Not Registered? <NavLink to='/dashboard/register'>Sign Up!</NavLink>
       </div>)
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
   return {
-    // device: state.device
+
   }
 }
 
@@ -79,5 +81,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-// export default LoginForm;
 export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
