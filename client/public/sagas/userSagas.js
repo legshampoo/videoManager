@@ -10,7 +10,8 @@ import {
   userLogout,
   userRegister,
   uploadVideo,
-  addDevice
+  addDevice,
+  getDevices
 } from '../api/userApi';
 
 import {
@@ -28,7 +29,10 @@ import {
   UPLOAD_VIDEO_FAIL,
   ADD_DEVICE,
   ADD_DEVICE_SUCCESS,
-  ADD_DEVICE_FAIL
+  ADD_DEVICE_FAIL,
+  GET_DEVICES,
+  GET_DEVICES_SUCCESS,
+  GET_DEVICES_FAIL
 } from '../actions/userActions';
 
 function * user_login(action){
@@ -106,12 +110,28 @@ function * add_device(action){
   }
 }
 
+function * get_devices(action){
+  try{
+    const response = yield call(getDevices, action.payload);
+    yield put({
+      type: GET_DEVICES_SUCCESS,
+      payload: response
+    });
+  }catch(e){
+    yield put({
+      type: GET_DEVICES_FAIL,
+      payload: e
+    });
+  }
+}
+
 function * sagas(){
   yield takeEvery('USER_LOGIN', user_login);
   yield takeEvery('USER_REGISTER', user_register);
   yield takeEvery('USER_LOGOUT', user_logout);
   yield takeEvery('UPLOAD_VIDEO', upload_video);
   yield takeEvery('ADD_DEVICE', add_device);
+  yield takeEvery('GET_DEVICES', get_devices);
 }
 
 export default sagas;

@@ -96,3 +96,20 @@ export const addDevice = async (payload) => {
     })
   })
 }
+
+export const getDevices = async (payload) => {
+  const url = '/api/user/get-devices';
+
+  console.log('post: ', url);
+  console.log('payload: ', payload);
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}

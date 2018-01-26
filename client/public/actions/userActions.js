@@ -13,6 +13,9 @@ export const UPLOAD_VIDEO_FAIL = 'UPLOAD_VIDEO_FAIL';
 export const ADD_DEVICE = 'ADD_DEVICE';
 export const ADD_DEVICE_SUCCESS = 'ADD_DEVICE_SUCCESS';
 export const ADD_DEVICE_FAIL = 'ADD_DEVICE_FAIL';
+export const GET_DEVICES = 'GET_DEVICES';
+export const GET_DEVICES_SUCCESS = 'GET_DEVICES_SUCCESS';
+export const GET_DEVICES_FAIL = 'GET_DEVICES_FAIL';
 
 export function userLogin(values){
   console.log('DISPATCH: ', USER_LOGIN);
@@ -54,6 +57,15 @@ export function addDevice(values){
 
   return {
     type: ADD_DEVICE,
+    payload: values
+  }
+}
+
+export function getDevices(values){
+  console.log('DISPATCH: ', GET_DEVICES);
+
+  return {
+    type: GET_DEVICES,
     payload: values
   }
 }

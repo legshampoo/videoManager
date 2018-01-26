@@ -24,11 +24,16 @@ router.post('/user/register',
 );
 
 router.post('/user/upload/video',
-  userController.upload,
   userController.uploadVideo
 );
 
 router.post('/user/add-device',
   userController.addDevice
 );
+
+router.post('/user/get-devices',
+  userController.getDevices
+);
+
+
 module.exports = router;

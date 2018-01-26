@@ -8,7 +8,9 @@ import {
   UPLOAD_VIDEO_SUCCESS,
   UPLOAD_VIDEO_FAIL,
   ADD_DEVICE_SUCCESS,
-  ADD_DEVICE_FAIL
+  ADD_DEVICE_FAIL,
+  GET_DEVICES_SUCCESS,
+  GET_DEVICES_FAIL
 } from '../actions/userActions';
 
 const initialState = {
@@ -71,6 +73,18 @@ function userReducer(state = initialState, action){
     case ADD_DEVICE_FAIL:
       console.log(action);
     return state
+
+    case GET_DEVICES_SUCCESS:
+      console.log(action);
+
+      return {
+        ...state,
+        devices: action.payload.data.devices
+      }
+
+    case GET_DEVICES_FAIL:
+      console.log(action);
+      return state
 
     default:
       return state

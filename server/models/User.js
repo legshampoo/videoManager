@@ -27,7 +27,15 @@ const userSchema = new Schema({
   hash: {
     type: String,
     required: true
-  }
+  },
+  devices: [{
+    _id: false,
+    id: String,
+    created_At: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 });
 
 userSchema.pre('save', function(next){

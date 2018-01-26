@@ -2,6 +2,8 @@ require('dotenv').config({ path: 'variables.env' });
 
 const mongoose = require('mongoose');
 
+const moment = require('moment');
+
 const passport = require('passport');
 const User = mongoose.model('User');
 const Device = mongoose.model('Device');
@@ -12,13 +14,24 @@ const promisify = require('es6-promisify');
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
-const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
+// const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
+const spacesEndpoint = new aws.Endpoint(process.env.DIGITALOCEAN_STORAGE_ENDPOINT + '/videos');
+// const VIDEOS_PATH = '/videos2/';
+
+// const s3 = new aws.S3({
+// 	endpoint: process.env.DIGITALOCEAN_STORAGE_ENDPOINT,
+// 	accessKeyId: process.env.DIGITALOCEAN_STORAGE_KEY,
+// 	secretAccessKey: process.env.DIGITALOCEAN_STORAGE_SECRET
+// });
+// const s3 = new aws.S3({
+// 	endpoint: spacesEndpoint
+// });
+
 const s3 = new aws.S3({
-	endpoint: process.env.DIGITALOCEAN_STORAGE_ENDPOINT,
+	endpoint: spacesEndpoint,
 	accessKeyId: process.env.DIGITALOCEAN_STORAGE_KEY,
 	secretAccessKey: process.env.DIGITALOCEAN_STORAGE_SECRET
 });
-
 
 
 exports.attemptedLoginDetection = function(req, res, next){
@@ -149,54 +162,54 @@ exports.logout = (req, res) => {
 	res.send(response);
 }
 
-exports.upload = multer({
-	storage: multer.memoryStorage()
-}).single('file');
+
+const upload = multer({
+	storage: multerS3({
+		s3: s3,
+		bucket: process.env.DIGITALOCEAN_BUCKET,
+		acl: 'public-read',
+		key: (request, file, cb) => {
+			var fileName = moment().local().format('YYYY-MM-DD HH:mm').toString() + '_' + file.originalname;
+			cb(null, fileName);
+		}
+	})
+}).array('file', 1);
+
 
 exports.uploadVideo = (req, res) => {
-	console.log('/user/upload/video');
-	console.log('req.file', req.file);
-	console.log('req.body', req.body);
-	const bucket = 'videomanager';
-	const path = '/videos/';
-	var key = path + req.body.fileName;
-	// var key = path + 'filenamez';
+	console.log('UPLOAD');
+	console.log(req.body);
 
-	var params = {
-		Bucket: bucket,
-		Key: key,
-		ACL: 'public-read',
-		Body: req.file.buffer
-	}
+	upload(req, res, (error) => {
+		if(error){
+			console.log(error);
+			var payload = {
+				api: {
+					success: false,
+					message: 'File upload error',
+					error: error
+				}
+			}
 
-	var uploadFile = s3.putObject(params).promise();
+			return res.send(payload);
+		}
 
-	uploadFile.then(data => {
-		console.log('Upload success!!!');
-		console.log(data);
-
-		var response = {
+		console.log('success');
+		var payload = {
 			api: {
-				error: false,
-				message: 'User uploaded video'
+				success: true,
+				message: 'File upload successful'
 			}
 		}
 
-		return res.send(response);
-
+		res.send(payload);
 	})
-	.catch(err => {
-		console.log('error: ', err);
-		return
-	});
 }
+
 
 exports.addDevice = async (req, res) => {
 	console.log('/user/add-device');
 	console.log('req.body', req.body);
-
-
-	console.log('add device here');
 
 	const device = new Device({
 		owner: req.body.owner,
@@ -206,46 +219,83 @@ exports.addDevice = async (req, res) => {
 		uuid: req.body.uuid
 	});
 
-	const success = await device.save()
-	.then(data => {
-		console.log('Added Device to mongodb: ', data);
-		return true
-	})
-	.catch(err => {
-		console.log('MongoDB error adding device:');
-		console.log(err);
-		return false;
-		// var response = {
-		// 	api: {
-		// 		error: true,
-		// 		message: 'Failed to add new device'
-		// 	}
-		// }
-    //
-		// res.send(response);
-	});
+	device.save()
+		.then(data => {
+			console.log('Added Device to mongodb: ', data);
 
-	var response = {};
+			var query = { _id: req.body.ownerId };
+			var options = {
+				$addToSet: {
+					devices: {
+						id: req.body.uuid
+					}
+				}
+			}
 
-	if(success){
-		response.api = {
-			error: false,
-			message: 'Device added to owner'
-		};
-	}else{
-		response.api = {
-			error: true,
-			message: 'Error adding device'
-		};
+			User.findOneAndUpdate(query, options, { new: true })
+				.then(r => {
+					console.log(r);
+					var response = {
+						api: {
+							error: false,
+							message: 'Device added to owner'
+						}
+					}
+
+					return res.send(response);
+				})
+				.catch(err => {
+					console.log(err);
+					var response = {
+						api: {
+							error: true,
+							message: 'Error adding device'
+						}
+					}
+
+					return res.send(response);
+				})
+		})
+		.catch(err => {
+			console.log('MongoDB error adding device:');
+			console.log(err);
+
+			var response = {
+				api: {
+					error: true,
+					message: 'Error adding device'
+				}
+			}
+
+			return res.send(response);
+		});
+}
+
+exports.getDevices = async (req, res) => {
+	console.log(req.body);
+
+	var email = req.body.email;
+
+	var query = {
+		ownerId: req.body.id
 	}
-  //
-	// var response = {
-	// 	api: {
-	// 		error: false,
-	// 		message: 'User added new device'
-	// 	}
-	// }
 
-	return res.send(response);
+	Device.find({
+		ownerId: req.body.id
+		})
+		.then(data => {
+			console.log('d');
+			console.log(data);
+			var devices = data;
+
+			var payload = {
+				devices: devices
+			}
+			return res.send(payload);
+		})
+		.catch(err => {
+			console.log(err);
+			return res.send(err);
+		})
 
 }

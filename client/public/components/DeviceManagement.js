@@ -4,6 +4,9 @@ import { connect } from 'react-redux';
 // import styles from '../css/app.css';
 
 import DeviceUpdateForm from './DeviceUpdateForm';
+import ListDevices from './ListDevices';
+
+// import { getDevices } from './userActions';
 
 class DeviceManagement extends React.Component {
   constructor(props){
@@ -12,25 +15,26 @@ class DeviceManagement extends React.Component {
 
   componentDidMount(){
     console.log('device management mounted');
+    // var user = this.props.user;
+    // this.props.getDevices(user.email);
   }
 
   componentWillReceiveProps(nextProps){
     // if(this.props != nextProps){
     //   console.log('new props');
     //   this.props = nextProps;
-    //
-    //   if(this.props.user.authorized){
-    //     console.log('yees authed');
-    //     this.props.history.push('/dashboard/home');
-    //   }
+    //   var user = this.props.user;
+    //   this.props.getDevices(user.email);
     // }
   }
 
   render(){
+    var user = this.props.user.data;
+
     return (
       <div>
-        DeviceManagement
         <DeviceUpdateForm />
+        <ListDevices/>
       </div>)
   }
 }
