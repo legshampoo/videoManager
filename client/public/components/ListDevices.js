@@ -2,6 +2,15 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 // import styles from '../css/app.css';
+// import { NavLink } from 'react-router-dom';
+import FlatButton from 'material-ui/FlatButton';
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink,
+  withRouter
+} from 'react-router-dom';
+
 
 // import DeviceUpdateForm from './DeviceUpdateForm';
 import { getDevices } from '../actions/userActions';
@@ -9,12 +18,13 @@ import { getDevices } from '../actions/userActions';
 class ListDevices extends React.Component {
   constructor(props){
     super(props);
+
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount(){
-    console.log('list devices mounted');
+    // console.log('list devices mounted');
     var user = this.props.user.data;
-    console.log(user._id);
     var payload = {
       email: user.email,
       id: user._id,
@@ -25,9 +35,13 @@ class ListDevices extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if(this.props != nextProps){
-      console.log('new props');
       this.props = nextProps;
     }
+  }
+
+  handleClick(deviceId){
+    var path = this.props.match.path + '/' + deviceId;
+    this.props.history.push(path);
   }
 
   renderDeviceData(){
@@ -42,18 +56,19 @@ class ListDevices extends React.Component {
     }
 
     var devices = this.props.user.devices;
-    console.log(devices);
+    let content = [];
+    Object.keys(devices).forEach(key => {
+      var id = devices[key].uuid;
+      var name = devices[key].deviceName;
 
-    var content = [];
-    devices.forEach(device => {
-      console.log(device.deviceName);
-      var d = (
-        <div key={device.deviceName}>
-          {device.deviceName}
-        </div>
+      let item = (
+        <FlatButton
+          key={key}
+          onClick={() => this.handleClick(id)} >
+            {name}
+          </FlatButton>
       )
-
-      content.push(d);
+      content.push(item);
     })
 
     return(
@@ -84,4 +99,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListDevices);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ListDevices));

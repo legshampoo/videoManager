@@ -21,6 +21,7 @@ app.set("port", process.env.PORT || DEFAULT_PORT);
 // THIS NEEDS TO BE BEFORE ROUTES, otherwise it won't be imported
 require('./server/models/Device');
 require('./server/models/User');
+require('./server/models/Media');
 require('./server/handlers/passport');
 
 //this needs to come AFTER model imports

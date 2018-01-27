@@ -101,6 +101,40 @@ export const getDevices = async (payload) => {
   const url = '/api/user/get-devices';
 
   console.log('post: ', url);
+  // console.log('payload: ', payload);
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export const getDeviceInfo = async (payload) => {
+  const url = '/api/user/get-device-info';
+
+  console.log('post: ', url);
+  console.log('payload: ', payload);
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export const getUserMedia = async (payload) => {
+  const url = '/api/user/get-user-media';
+
+  console.log('post: ', url);
   console.log('payload: ', payload);
 
   return new Promise((fulfill, reject) => {

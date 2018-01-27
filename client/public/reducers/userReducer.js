@@ -10,7 +10,11 @@ import {
   ADD_DEVICE_SUCCESS,
   ADD_DEVICE_FAIL,
   GET_DEVICES_SUCCESS,
-  GET_DEVICES_FAIL
+  GET_DEVICES_FAIL,
+  GET_DEVICE_INFO_SUCCESS,
+  GET_DEVICE_INFO_FAIL,
+  GET_USER_MEDIA_SUCCESS,
+  GET_USER_MEDIA_FAIL
 } from '../actions/userActions';
 
 const initialState = {
@@ -68,7 +72,12 @@ function userReducer(state = initialState, action){
 
     case ADD_DEVICE_SUCCESS:
       console.log(action);
-    return state
+
+      return {
+        ...state,
+        data: action.payload.data.user,
+        devices: action.payload.data.devices
+      }
 
     case ADD_DEVICE_FAIL:
       console.log(action);
@@ -83,6 +92,31 @@ function userReducer(state = initialState, action){
       }
 
     case GET_DEVICES_FAIL:
+      console.log(action);
+      return state
+
+    case GET_DEVICE_INFO_SUCCESS:
+      console.log(action);
+      // var uuid = action.payload.data.uuid;
+
+      return {
+        ...state,
+        currentDevice: action.payload.data.data
+      }
+
+    case GET_DEVICES_FAIL:
+      console.log(action);
+      return state
+
+    case GET_USER_MEDIA_SUCCESS:
+      console.log(action);
+
+      return {
+        ...state,
+        media: action.payload.data.media
+      }
+
+    case GET_USER_MEDIA_FAIL:
       console.log(action);
       return state
 

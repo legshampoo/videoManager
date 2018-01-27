@@ -21,7 +21,7 @@ class DeviceUpdateForm extends React.Component {
   }
 
   componentDidMount(){
-    console.log('Device update form mounted');
+    // console.log('Device update form mounted');
   }
 
   componentWillReceiveProps(nextProps){

@@ -19,24 +19,22 @@ class UploadVideoForm extends React.Component {
 
     this.state = {
       file: null,
-      fileName: ''
+      title: '',
+      description: ''
     }
   }
 
   componentDidMount(){
-    console.log('uploadVideo mounted');
+    // console.log('uploadVideo mounted');
   }
 
   componentWillReceiveProps(nextProps){
-    // if(this.props != nextProps){
-    //   console.log('new props');
-    //   this.props = nextProps;
-    //
-    //   if(this.props.user.authorized){
-    //     console.log('yees authed');
-    //     this.props.history.push('/dashboard/home');
-    //   }
-    // }
+    if(this.props != nextProps){
+      console.log('new props');
+      this.props = nextProps;
+
+      console.log('user id: ', this.props.user.data._id);
+    }
   }
 
   handleFormChange(e){
@@ -51,11 +49,6 @@ class UploadVideoForm extends React.Component {
   }
 
   handleFileChange(filesArray){
-    // e.preventDefault();
-    // console.log(e);
-    // console.log(filesArray);
-    // let filesArray = e.target.files;
-
     this.setState({
       file: filesArray[0]
     }, function(){
@@ -67,12 +60,13 @@ class UploadVideoForm extends React.Component {
     e.preventDefault();
     console.log('submit');
     console.log(this.state);
-    // const FormData = new FormData();
     var form = new FormData();
 
+    form.append('title', this.state.title);
+    form.append('description', this.state.description);
+    form.append('userId', this.props.user.data._id);
+    form.append('userEmail', this.props.user.data.email);
     form.append('file', this.state.file);
-    form.append('fileName', this.state.fileName);
-
     var payload = form;
 
     this.props.uploadVideo(payload);
@@ -84,22 +78,19 @@ class UploadVideoForm extends React.Component {
         UploadVideoForm
         <form
           encType='multipart/form-data'>
-          {/* <RaisedButton
-            containerElement='label'
-            label='Choose File'
-            onClick={ (e) => this.handleChange(e)}>
-            <input
-              type='file'
-              style={{display: 'none'}}/>
-          </RaisedButton> */}
-          <TextField
-            name='fileName'
-            floatingLabelText='File Name'
-            value={this.state.fileName}
-            onChange={this.handleFormChange} />
           <input type='file'
               name='file'
               onChange={ (e) => this.handleFileChange(e.target.files) } />
+          <TextField
+            name='title'
+            floatingLabelText='Title'
+            value={this.state.title}
+            onChange={this.handleFormChange} />
+          <TextField
+            name='description'
+            floatingLabelText='Description'
+            value={this.state.description}
+            onChange={this.handleFormChange} />
           <RaisedButton
             label='Upload'
             onClick={(e) => this.handleSubmit(e)} />

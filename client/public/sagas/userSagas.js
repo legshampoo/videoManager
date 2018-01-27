@@ -11,7 +11,9 @@ import {
   userRegister,
   uploadVideo,
   addDevice,
-  getDevices
+  getDevices,
+  getDeviceInfo,
+  getUserMedia
 } from '../api/userApi';
 
 import {
@@ -32,7 +34,13 @@ import {
   ADD_DEVICE_FAIL,
   GET_DEVICES,
   GET_DEVICES_SUCCESS,
-  GET_DEVICES_FAIL
+  GET_DEVICES_FAIL,
+  GET_DEVICE_INFO,
+  GET_DEVICE_INFO_SUCCESS,
+  GET_DEVICE_INFO_FAIL,
+  GET_USER_MEDIA,
+  GET_USER_MEDIA_SUCCESS,
+  GET_USER_MEDIA_FAIL
 } from '../actions/userActions';
 
 function * user_login(action){
@@ -125,6 +133,36 @@ function * get_devices(action){
   }
 }
 
+function * get_device_info(action){
+  try{
+    const response = yield call(getDeviceInfo, action.payload);
+    yield put({
+      type: GET_DEVICE_INFO_SUCCESS,
+      payload: response
+    });
+  }catch(e){
+    yield put({
+      type: GET_DEVICE_INFO_FAIL,
+      payload: e
+    });
+  }
+}
+
+function * get_user_media(action){
+  try{
+    const response = yield call(getUserMedia, action.payload);
+    yield put({
+      type: GET_USER_MEDIA_SUCCESS,
+      payload: response
+    });
+  }catch(e){
+    yield put({
+      type: GET_USER_MEDIA_FAIL,
+      payload: e
+    });
+  }
+}
+
 function * sagas(){
   yield takeEvery('USER_LOGIN', user_login);
   yield takeEvery('USER_REGISTER', user_register);
@@ -132,6 +170,8 @@ function * sagas(){
   yield takeEvery('UPLOAD_VIDEO', upload_video);
   yield takeEvery('ADD_DEVICE', add_device);
   yield takeEvery('GET_DEVICES', get_devices);
+  yield takeEvery('GET_DEVICE_INFO', get_device_info);
+  yield takeEvery('GET_USER_MEDIA', get_user_media);
 }
 
 export default sagas;

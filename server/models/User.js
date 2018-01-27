@@ -35,6 +35,12 @@ const userSchema = new Schema({
       type: Date,
       default: Date.now
     }
+  }],
+  media: [{
+    _id: false,
+    content_id: String,
+    location: String,
+    title: String
   }]
 });
 

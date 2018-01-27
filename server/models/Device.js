@@ -34,6 +34,7 @@ const deviceSchema = new mongoose.Schema({
     required: false
   },
   tags: [String],
+  currentMedia: String
 });
 
 deviceSchema.pre('save', function(next){

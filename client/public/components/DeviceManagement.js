@@ -1,11 +1,17 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import {
+  BrowserRouter as Router,
+  Route,
+  withRouter
+} from 'react-router-dom';
 // import styles from '../css/app.css';
 
-import DeviceUpdateForm from './DeviceUpdateForm';
+// import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
-
+import DeviceControls from './DeviceControls';
+import ListMedia from './ListMedia';
 // import { getDevices } from './userActions';
 
 class DeviceManagement extends React.Component {
@@ -14,27 +20,23 @@ class DeviceManagement extends React.Component {
   }
 
   componentDidMount(){
-    console.log('device management mounted');
-    // var user = this.props.user;
-    // this.props.getDevices(user.email);
+    // console.log('device management mounted');
   }
 
   componentWillReceiveProps(nextProps){
-    // if(this.props != nextProps){
-    //   console.log('new props');
-    //   this.props = nextProps;
-    //   var user = this.props.user;
-    //   this.props.getDevices(user.email);
-    // }
+    if(this.props != nextProps){
+      this.props = nextProps;
+    }
   }
 
   render(){
     var user = this.props.user.data;
-
     return (
       <div>
-        <DeviceUpdateForm />
         <ListDevices/>
+        <div>
+          <Route path={`${this.props.match.path}/:deviceId`} component={DeviceControls} />
+        </div>
       </div>)
   }
 }
@@ -51,4 +53,5 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DeviceManagement));
 export default connect(mapStateToProps, mapDispatchToProps)(DeviceManagement);

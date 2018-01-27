@@ -30,7 +30,6 @@ class UploadVideo extends React.Component {
   render(){
     return (
       <div>
-        UploadVideo
         <UploadVideoForm />
       </div>)
   }

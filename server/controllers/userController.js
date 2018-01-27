@@ -7,6 +7,7 @@ const moment = require('moment');
 const passport = require('passport');
 const User = mongoose.model('User');
 const Device = mongoose.model('Device');
+const Media = mongoose.model('Media');
 
 const promisify = require('es6-promisify');
 
@@ -16,16 +17,6 @@ const multer = require('multer');
 const multerS3 = require('multer-s3');
 // const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
 const spacesEndpoint = new aws.Endpoint(process.env.DIGITALOCEAN_STORAGE_ENDPOINT + '/videos');
-// const VIDEOS_PATH = '/videos2/';
-
-// const s3 = new aws.S3({
-// 	endpoint: process.env.DIGITALOCEAN_STORAGE_ENDPOINT,
-// 	accessKeyId: process.env.DIGITALOCEAN_STORAGE_KEY,
-// 	secretAccessKey: process.env.DIGITALOCEAN_STORAGE_SECRET
-// });
-// const s3 = new aws.S3({
-// 	endpoint: spacesEndpoint
-// });
 
 const s3 = new aws.S3({
 	endpoint: spacesEndpoint,
@@ -169,16 +160,18 @@ const upload = multer({
 		bucket: process.env.DIGITALOCEAN_BUCKET,
 		acl: 'public-read',
 		key: (request, file, cb) => {
-			var fileName = moment().local().format('YYYY-MM-DD HH:mm').toString() + '_' + file.originalname;
+			var date = moment().local().format('YYYY-MM-DD HH:mm').toString()
+			// var fileName = moment().local().format('YYYY-MM-DD HH:mm').toString() + '_' + file.originalname;
+			var fileName = date + '_' + file.originalname;
+			fileName = fileName.replace(/ /g, '_');
 			cb(null, fileName);
 		}
 	})
 }).array('file', 1);
 
 
-exports.uploadVideo = (req, res) => {
+exports.uploadVideo = async (req, res) => {
 	console.log('UPLOAD');
-	console.log(req.body);
 
 	upload(req, res, (error) => {
 		if(error){
@@ -193,16 +186,60 @@ exports.uploadVideo = (req, res) => {
 
 			return res.send(payload);
 		}
+  	console.log('req.files: ', req.files);
+		console.log('req.body: ', req.body);
+
+		console.log('file location: ', req.files[0].location);
 
 		console.log('success');
-		var payload = {
-			api: {
-				success: true,
-				message: 'File upload successful'
-			}
-		}
+		const date = moment().local().format('YYYY-MM-DD HH:mm').toString();
 
-		res.send(payload);
+		const media = new Media({
+			type: 'video',
+			owner_id: req.body.userId,
+			owner_email: req.body.userEmail,
+			created_at: date,
+			title: req.body.title,
+			description: req.body.description,
+			location: req.files[0].location
+		});
+
+		media.save()
+			.then(r => {
+				console.log('media saved');
+
+				var query = { _id: req.body.userId };
+				var options = {
+					$addToSet: {
+						media: {
+							content_id: r._id.toString(),
+							location: r.location,
+							title: r.title
+						}
+					}
+				}
+
+				User.findOneAndUpdate(query, options, { new : true })
+					.then(data => {
+						console.log('media added to user library');
+						var payload = {
+							api: {
+								success: true,
+								message: 'File upload successful'
+							}
+						}
+
+						res.send(payload);
+					})
+					.catch(err => {
+						console.log(err);
+						res.send(err);
+					})
+			})
+			.catch(err => {
+				console.log(err);
+				res.send(err);
+			})
 	})
 }
 
@@ -233,16 +270,20 @@ exports.addDevice = async (req, res) => {
 			}
 
 			User.findOneAndUpdate(query, options, { new: true })
-				.then(r => {
-					console.log(r);
-					var response = {
-						api: {
-							error: false,
-							message: 'Device added to owner'
-						}
-					}
+				.then(user => {
+					console.log(user);
 
-					return res.send(response);
+					Device.find({
+						ownerId: user._id
+						})
+						.then(devices => {
+							console.log(devices);
+							var payload = {
+								user: user,
+								devices: devices
+							}
+							res.send(payload);
+						})
 				})
 				.catch(err => {
 					console.log(err);
@@ -284,7 +325,7 @@ exports.getDevices = async (req, res) => {
 		ownerId: req.body.id
 		})
 		.then(data => {
-			console.log('d');
+			console.log('Get Devices');
 			console.log(data);
 			var devices = data;
 
@@ -298,4 +339,49 @@ exports.getDevices = async (req, res) => {
 			return res.send(err);
 		})
 
+}
+
+exports.getDeviceInfo = (req, res) => {
+	console.log('Get Device Info');
+	console.log(req.body);
+
+	Device.find({
+			uuid: req.body.uuid
+		})
+		.then(data => {
+			console.log(data[0]);
+
+			var payload = {
+				data: data[0]
+			}
+
+			res.send(payload);
+		})
+		.catch(err => {
+			console.log(err);
+			res.send(err);
+		})
+}
+
+exports.getUserMedia = (req, res) => {
+	console.log('Get User Media');
+	console.log(req.body);
+
+	Media.find({
+			owner_id: req.body.userId
+		})
+		.then(data => {
+			console.log('got media');
+			console.log(data);
+
+			var payload = {
+				media: data
+			}
+
+			res.send(payload);
+		})
+		.catch(err => {
+			console.log(err);
+			res.send(err);
+		})
 }

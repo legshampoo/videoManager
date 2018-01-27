@@ -10,6 +10,7 @@ import Home from './Home';
 import DashboardHome from './DashboardHome';
 import Login from './Login';
 import RegisterUser from './RegisterUser';
+
 // import UploadVideo from './UploadVideo';
 
 import DeviceLogin from './DeviceLogin';
@@ -27,6 +28,7 @@ class App extends React.Component {
           <Route exact path='/dashboard/login' component={Login} />
           <Route exact path='/dashboard/register' component={RegisterUser} />
           <Route path='/dashboard/home' component={DashboardHome} />
+          {/* <Route exact path='/dashboard/home/device/:deviceName' component={ManageDevice} /> */}
           {/* <Route exact path='/dashboard/upload' component={UploadVideo} /> */}
           <Route exact path='/device/login' component={DeviceLogin} />
           <Route exact path='/device/:uuid' component={DeviceHome} />

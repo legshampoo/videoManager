@@ -19,6 +19,8 @@ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import UploadVideo from './UploadVideo';
 import DeviceManagement from './DeviceManagement';
 import LogoutForm from './LogoutForm';
+// import DeviceInfo from './DeviceInfo';
+import AddDevice from './AddDevice';
 
 class DashboardHome extends React.Component {
   constructor(props){
@@ -45,8 +47,6 @@ class DashboardHome extends React.Component {
   }
 
   handleClick_dropDown(event, path, value){
-    console.log(this.props.match.path);
-    console.log('path: ', path);
     this.props.history.push('/dashboard/home/' + path);
   }
 
@@ -66,15 +66,20 @@ class DashboardHome extends React.Component {
               primaryText='Upload'
               value='upload' />
             <MenuItem
-              primaryText='Devices'
-              value='devices' />
+              primaryText='Add Device'
+              value='add-device' />
+            <MenuItem
+              primaryText='Manage Devices'
+              value='manage-devices' />
           </IconMenu>
           Name: {this.props.user.data.name} <br />
           Email: {this.props.user.data.email} <br />
           <LogoutForm />
         </AppBar>
-        <Route exact path={`${this.props.match.path}/upload`} component={UploadVideo} />
-        <Route exact path={`${this.props.match.path}/devices`} component={DeviceManagement} />
+        <Route path={`${this.props.match.path}/upload`} component={UploadVideo} />
+        <Route path={`${this.props.match.path}/add-device`} component={AddDevice} />
+        <Route path={`${this.props.match.path}/manage-devices`} component={DeviceManagement} />
+        {/* <Route exact path={`${this.props.match.path}/devices/deviceId`} component={DeviceControlPanel} /> */}
       </div>)
   }
 }

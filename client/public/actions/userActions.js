@@ -16,6 +16,12 @@ export const ADD_DEVICE_FAIL = 'ADD_DEVICE_FAIL';
 export const GET_DEVICES = 'GET_DEVICES';
 export const GET_DEVICES_SUCCESS = 'GET_DEVICES_SUCCESS';
 export const GET_DEVICES_FAIL = 'GET_DEVICES_FAIL';
+export const GET_DEVICE_INFO = 'GET_DEVICE_INFO';
+export const GET_DEVICE_INFO_SUCCESS = 'GET_DEVICE_INFO_SUCCESS';
+export const GET_DEVICE_INFO_FAIL = 'GET_DEVICE_INFO_FAIL';
+export const GET_USER_MEDIA = 'GET_USER_MEDIA';
+export const GET_USER_MEDIA_SUCCESS = 'GET_USER_MEDIA_SUCCESS';
+export const GET_USER_MEDIA_FAIL = 'GET_USER_MEDIA_FAIL';
 
 export function userLogin(values){
   console.log('DISPATCH: ', USER_LOGIN);
@@ -66,6 +72,24 @@ export function getDevices(values){
 
   return {
     type: GET_DEVICES,
+    payload: values
+  }
+}
+
+export function getDeviceInfo(values){
+  console.log('DISPATCH: ', GET_DEVICE_INFO);
+
+  return {
+    type: GET_DEVICE_INFO,
+    payload: values
+  }
+}
+
+export function getUserMedia(values){
+  console.log('DISPATCH: ', GET_USER_MEDIA);
+
+  return {
+    type: GET_USER_MEDIA,
     payload: values
   }
 }

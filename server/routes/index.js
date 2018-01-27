@@ -35,5 +35,13 @@ router.post('/user/get-devices',
   userController.getDevices
 );
 
+router.post('/user/get-device-info',
+  userController.getDeviceInfo
+);
+
+router.post('/user/get-user-media',
+  userController.getUserMedia
+);
+
 
 module.exports = router;
