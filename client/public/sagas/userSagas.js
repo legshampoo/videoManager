@@ -13,7 +13,8 @@ import {
   addDevice,
   getDevices,
   getDeviceInfo,
-  getUserMedia
+  getUserMedia,
+  updateDevice
 } from '../api/userApi';
 
 import {
@@ -40,7 +41,10 @@ import {
   GET_DEVICE_INFO_FAIL,
   GET_USER_MEDIA,
   GET_USER_MEDIA_SUCCESS,
-  GET_USER_MEDIA_FAIL
+  GET_USER_MEDIA_FAIL,
+  UPDATE_DEVICE,
+  UPDATE_DEVICE_SUCCESS,
+  UPDATE_DEVICE_FAIL
 } from '../actions/userActions';
 
 function * user_login(action){
@@ -163,6 +167,21 @@ function * get_user_media(action){
   }
 }
 
+function * update_device(action){
+  try{
+    const response = yield call(updateDevice, action.payload);
+    yield put({
+      type: UPDATE_DEVICE_SUCCESS,
+      payload: response
+    });
+  }catch(e){
+    yield put({
+      type: UPDATE_DEVICE_FAIL,
+      payload: e
+    });
+  }
+}
+
 function * sagas(){
   yield takeEvery('USER_LOGIN', user_login);
   yield takeEvery('USER_REGISTER', user_register);
@@ -172,6 +191,7 @@ function * sagas(){
   yield takeEvery('GET_DEVICES', get_devices);
   yield takeEvery('GET_DEVICE_INFO', get_device_info);
   yield takeEvery('GET_USER_MEDIA', get_user_media);
+  yield takeEvery('UPDATE_DEVICE', update_device);
 }
 
 export default sagas;

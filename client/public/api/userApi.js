@@ -5,11 +5,9 @@ export const userLogin = async (payload) => {
 
   console.log('post: ', url);
 
-
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
     .then(res => {
-      console.log(res);
       if(!res.data.authorized){
         reject(res);
       }else{
@@ -30,8 +28,6 @@ export const userRegister = async (payload) => {
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
     .then(res => {
-      console.log(res.data.api.error);
-
       if(res.data.api.error){
         reject(res);
         return
@@ -40,7 +36,6 @@ export const userRegister = async (payload) => {
       fulfill(res);
     })
     .catch(err => {
-      console.log('catching it here');
       reject(err);
     })
   })
@@ -50,7 +45,6 @@ export const userLogout = async (payload) => {
   const url = '/api/user/logout';
 
   console.log('post: ', url);
-
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
@@ -68,7 +62,6 @@ export const uploadVideo = async (payload) => {
 
   console.log('post: ', url);
 
-
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
     .then(res => {
@@ -85,7 +78,6 @@ export const addDevice = async (payload) => {
 
   console.log('post: ', url);
 
-
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
     .then(res => {
@@ -101,7 +93,6 @@ export const getDevices = async (payload) => {
   const url = '/api/user/get-devices';
 
   console.log('post: ', url);
-  // console.log('payload: ', payload);
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
@@ -118,7 +109,6 @@ export const getDeviceInfo = async (payload) => {
   const url = '/api/user/get-device-info';
 
   console.log('post: ', url);
-  console.log('payload: ', payload);
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
@@ -135,7 +125,22 @@ export const getUserMedia = async (payload) => {
   const url = '/api/user/get-user-media';
 
   console.log('post: ', url);
-  console.log('payload: ', payload);
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export const updateDevice = async (payload) => {
+  const url = '/api/user/update-device';
+
+  console.log('post: ', url);
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)

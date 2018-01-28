@@ -1,7 +1,9 @@
 import {
   REQUEST_NEW_UUID_SUCCESS,
   REQUEST_NEW_UUID_FAIL,
-  UPDATE_UUID
+  UPDATE_UUID,
+  DEVICE_GET_DEVICE_INFO_SUCCESS,
+  DEVICE_GET_DEVICE_INFO_FAIL
 } from '../actions/deviceActions';
 
 import {
@@ -37,6 +39,17 @@ function deviceReducer(state = initialState, action){
       return Object.assign({}, state, {
         uuid: savedUUID
       })
+
+    case DEVICE_GET_DEVICE_INFO_SUCCESS:
+      console.log(action);
+      return {
+        ...state,
+        data: action.payload.data.data
+      }
+      
+    case DEVICE_GET_DEVICE_INFO_FAIL:
+      console.log(action);
+      return state
 
     default:
       return state

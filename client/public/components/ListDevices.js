@@ -1,8 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
-// import { NavLink } from 'react-router-dom';
+
 import FlatButton from 'material-ui/FlatButton';
 import {
   BrowserRouter as Router,
@@ -12,7 +11,6 @@ import {
 } from 'react-router-dom';
 
 
-// import DeviceUpdateForm from './DeviceUpdateForm';
 import { getDevices } from '../actions/userActions';
 
 class ListDevices extends React.Component {
@@ -23,7 +21,6 @@ class ListDevices extends React.Component {
   }
 
   componentDidMount(){
-    // console.log('list devices mounted');
     var user = this.props.user.data;
     var payload = {
       email: user.email,

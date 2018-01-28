@@ -5,15 +5,39 @@ import { connect } from 'react-redux';
 
 import VideoPlayer from './VideoPlayer';
 
+import { getDeviceInfo } from '../actions/deviceActions';
+
 class DeviceHome extends Component {
+  constructor(props){
+    super(props);
+
+  }
+
   componentDidMount(){
     console.log('mounted');
+    if(this.props.device.uuid === undefined){
+      console.log('uuid is undefined');
+      return
+    }
+    console.log('id check: ', this.props.device.uuid);
+    var payload = {
+      uuid: this.props.device.uuid
+    }
+
+    this.props.getDeviceInfo(payload);
+
   }
+
+  componentWillReceiveProps(nextProps){
+    if(this.props != nextProps){
+      this.props = nextProps;
+      console.log('got props device home');
+    }
+  }
+
   render(){
     return (
       <div>
-        device home<br />
-        id: {this.props.device.uuid}<br />
         <VideoPlayer />
       </div>)
   }
@@ -29,7 +53,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // updateUUID: bindActionCreators(updateUUID, dispatch)
+    getDeviceInfo: bindActionCreators(getDeviceInfo, dispatch)
   }
 }
 

@@ -7,12 +7,13 @@ import FlatButton from 'material-ui/FlatButton';
 import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
 
-import { getUserMedia } from '../actions/userActions';
+import { getUserMedia, updateDevice } from '../actions/userActions';
 
 class ListMedia extends React.Component {
   constructor(props){
     super(props);
     this.getUserMedia = this.getUserMedia.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount(){
@@ -24,7 +25,7 @@ class ListMedia extends React.Component {
   }
 
   getUserMedia(){
-    console.log('getting media');
+    console.log('get user media');
     var userId = this.props.user.data._id;
     var payload = {
       userId: userId
@@ -36,7 +37,6 @@ class ListMedia extends React.Component {
   componentWillReceiveProps(nextProps){
     var idChanged = false;
     if(this.props != nextProps){
-      console.log('new props');
       if(this.props.user.data._id != nextProps.user.data._id){
         idChanged = true;
       }
@@ -46,6 +46,18 @@ class ListMedia extends React.Component {
         this.getUserMedia();
       }
     }
+  }
+
+  handleClick(location){
+    console.log('location', location);
+    console.log('update device: ', this.props.deviceId);
+
+    var payload = {
+      uuid: this.props.deviceId,
+      currentMedia: location
+    }
+
+    this.props.updateDevice(payload);
   }
 
   renderMedia(){
@@ -62,19 +74,20 @@ class ListMedia extends React.Component {
     var media = this.props.user.media;
     let content = [];
     media.forEach((m, index) => {
-      console.log(m);
-
+      // console.log(m);
+      var location = m.location;
       let item = (
         <FlatButton
           key={index}
-          style={{height: 100, width: 300}}>
+          style={{height: 100, width: 300}}
+          onClick={() => this.handleClick(location)}>
           <div>
             Title: {m.title}<br />
             Description: {m.description}<br />
           </div>
         </FlatButton>
       )
-      
+
       content.push(item);
     })
 
@@ -100,7 +113,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getUserMedia: bindActionCreators(getUserMedia, dispatch)
+    getUserMedia: bindActionCreators(getUserMedia, dispatch),
+    updateDevice: bindActionCreators(updateDevice, dispatch)
   }
 }
 

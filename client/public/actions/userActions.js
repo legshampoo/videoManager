@@ -22,6 +22,9 @@ export const GET_DEVICE_INFO_FAIL = 'GET_DEVICE_INFO_FAIL';
 export const GET_USER_MEDIA = 'GET_USER_MEDIA';
 export const GET_USER_MEDIA_SUCCESS = 'GET_USER_MEDIA_SUCCESS';
 export const GET_USER_MEDIA_FAIL = 'GET_USER_MEDIA_FAIL';
+export const UPDATE_DEVICE = 'UPDATE_DEVICE';
+export const UPDATE_DEVICE_SUCCESS = 'UPDATE_DEVICE_SUCCESS';
+export const UPDATE_DEVICE_FAIL = 'UPDATE_DEVICE_FAIL';
 
 export function userLogin(values){
   console.log('DISPATCH: ', USER_LOGIN);
@@ -90,6 +93,15 @@ export function getUserMedia(values){
 
   return {
     type: GET_USER_MEDIA,
+    payload: values
+  }
+}
+
+export function updateDevice(values){
+  console.log('DISPATCH: ', UPDATE_DEVICE);
+
+  return {
+    type: UPDATE_DEVICE,
     payload: values
   }
 }

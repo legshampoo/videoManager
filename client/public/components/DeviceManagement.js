@@ -8,11 +8,9 @@ import {
 } from 'react-router-dom';
 // import styles from '../css/app.css';
 
-// import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
 import DeviceControls from './DeviceControls';
 import ListMedia from './ListMedia';
-// import { getDevices } from './userActions';
 
 class DeviceManagement extends React.Component {
   constructor(props){
@@ -20,7 +18,7 @@ class DeviceManagement extends React.Component {
   }
 
   componentDidMount(){
-    // console.log('device management mounted');
+
   }
 
   componentWillReceiveProps(nextProps){
@@ -53,5 +51,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(DeviceManagement));
 export default connect(mapStateToProps, mapDispatchToProps)(DeviceManagement);

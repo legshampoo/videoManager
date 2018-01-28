@@ -15,8 +15,9 @@ const promisify = require('es6-promisify');
 const aws = require('aws-sdk');
 const multer = require('multer');
 const multerS3 = require('multer-s3');
+const VIDEOS_FILE_PATH = '/videos/';
 // const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
-const spacesEndpoint = new aws.Endpoint(process.env.DIGITALOCEAN_STORAGE_ENDPOINT + '/videos');
+const spacesEndpoint = new aws.Endpoint(process.env.DIGITALOCEAN_STORAGE_ENDPOINT + VIDEOS_FILE_PATH);
 
 const s3 = new aws.S3({
 	endpoint: spacesEndpoint,
@@ -160,10 +161,11 @@ const upload = multer({
 		bucket: process.env.DIGITALOCEAN_BUCKET,
 		acl: 'public-read',
 		key: (request, file, cb) => {
-			var date = moment().local().format('YYYY-MM-DD HH:mm').toString()
-			// var fileName = moment().local().format('YYYY-MM-DD HH:mm').toString() + '_' + file.originalname;
+			console.log('original name: ', file.originalname);
+			var date = moment().local().format('YYYY-MM-DD HH:mm').toString();
 			var fileName = date + '_' + file.originalname;
 			fileName = fileName.replace(/ /g, '_');
+			console.log('processed name: ', fileName);
 			cb(null, fileName);
 		}
 	})
@@ -186,7 +188,9 @@ exports.uploadVideo = async (req, res) => {
 
 			return res.send(payload);
 		}
+		// console.log('req.file: ', req.file);
   	console.log('req.files: ', req.files);
+		console.log('req.file[0]: ', req.files[0]);
 		console.log('req.body: ', req.body);
 
 		console.log('file location: ', req.files[0].location);
@@ -194,6 +198,8 @@ exports.uploadVideo = async (req, res) => {
 		console.log('success');
 		const date = moment().local().format('YYYY-MM-DD HH:mm').toString();
 
+		var path = req.files[0].location + VIDEOS_FILE_PATH + req.files[0].key;
+		console.log('THE FULL PATH: ', path);
 		const media = new Media({
 			type: 'video',
 			owner_id: req.body.userId,
@@ -201,7 +207,7 @@ exports.uploadVideo = async (req, res) => {
 			created_at: date,
 			title: req.body.title,
 			description: req.body.description,
-			location: req.files[0].location
+			location: path
 		});
 
 		media.save()
@@ -349,8 +355,6 @@ exports.getDeviceInfo = (req, res) => {
 			uuid: req.body.uuid
 		})
 		.then(data => {
-			console.log(data[0]);
-
 			var payload = {
 				data: data[0]
 			}
@@ -371,11 +375,36 @@ exports.getUserMedia = (req, res) => {
 			owner_id: req.body.userId
 		})
 		.then(data => {
-			console.log('got media');
+			var payload = {
+				media: data
+			}
+
+			res.send(payload);
+		})
+		.catch(err => {
+			console.log(err);
+			res.send(err);
+		})
+}
+
+exports.updateDevice = (req, res) => {
+	console.log('Update Device');
+	console.log(req.body);
+
+	var query = { uuid: req.body.uuid };
+	var options = {
+		$set: {
+			currentMedia: req.body.currentMedia
+		}
+	}
+
+	Device.findOneAndUpdate(query, options, { new: true })
+		.then(data => {
+			console.log('DEVICE UPDATE RESPONSE: ');
 			console.log(data);
 
 			var payload = {
-				media: data
+				device: data
 			}
 
 			res.send(payload);

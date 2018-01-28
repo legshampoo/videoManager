@@ -5,7 +5,11 @@ const deviceController = require('../controllers/deviceController');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
 
-router.post('/request-new-uuid', deviceController.registerDevice);
+router.post('/device/request-new-uuid', deviceController.registerDevice);
+
+router.post('/device/get-device-info',
+  deviceController.getDeviceInfo
+);
 
 router.post('/user/login',
   authController.authenticate,
@@ -41,6 +45,10 @@ router.post('/user/get-device-info',
 
 router.post('/user/get-user-media',
   userController.getUserMedia
+);
+
+router.post('/user/update-device',
+  userController.updateDevice
 );
 
 

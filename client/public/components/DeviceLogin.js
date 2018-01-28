@@ -12,11 +12,13 @@ class DeviceLogin extends Component {
   }
 
   componentDidMount(){
+    console.log('device login mount, check uuid')
     //check the devices localStorage for a UUID
     this.checkUUID();
   }
 
   componentDidUpdate(){
+
     //listen for state change, when the UUID is found, redirect to device home page
     this.redirect();
   }
@@ -34,7 +36,7 @@ class DeviceLogin extends Component {
     }else{
       //take uuid saved in localStorage and store it to redux state
       console.log('UUID FOUND, proceeding to device home screen');
-      this.props.updateUUID(uuid);
+      this.props.updateUUID(uuid);  //saves to localstorage if it doesnt exist
     }
   }
 

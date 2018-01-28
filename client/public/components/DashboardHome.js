@@ -19,7 +19,6 @@ import MenuIcon from 'material-ui/svg-icons/navigation/menu';
 import UploadVideo from './UploadVideo';
 import DeviceManagement from './DeviceManagement';
 import LogoutForm from './LogoutForm';
-// import DeviceInfo from './DeviceInfo';
 import AddDevice from './AddDevice';
 
 class DashboardHome extends React.Component {
@@ -32,7 +31,7 @@ class DashboardHome extends React.Component {
       console.log('User NOT AUTHORIZED, redirect to login page');
       this.props.history.push('/dashboard/login');
     }else{
-      console.log('User is Authorized');
+      // console.log('User is Authorized');
     }
   }
 
@@ -79,7 +78,6 @@ class DashboardHome extends React.Component {
         <Route path={`${this.props.match.path}/upload`} component={UploadVideo} />
         <Route path={`${this.props.match.path}/add-device`} component={AddDevice} />
         <Route path={`${this.props.match.path}/manage-devices`} component={DeviceManagement} />
-        {/* <Route exact path={`${this.props.match.path}/devices/deviceId`} component={DeviceControlPanel} /> */}
       </div>)
   }
 }

@@ -9,7 +9,7 @@ const slug = require('slugs');  //used for url friendly slugs (not sure if neede
 const deviceSchema = new mongoose.Schema({
   deviceName: {
     type: String,
-    trim: true,  //removes white space in front and end
+    trim: true,  
     required: 'Please enter a device name'
   },
   uuid: {

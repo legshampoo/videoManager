@@ -5,17 +5,13 @@ import { connect } from 'react-redux';
 
 import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
-// import ListMedia from './ListMedia';
 
-import { getDeviceInfo, getUserMedia } from '../actions/userActions';
 import DeviceInfo from './DeviceInfo';
 import ListMedia from './ListMedia';
 
 class DeviceControls extends React.Component {
   constructor(props){
     super(props);
-
-    // this.renderDeviceInfo = this.renderDeviceInfo.bind(this);
 
     this.state = {
       uuid: ''
@@ -24,26 +20,19 @@ class DeviceControls extends React.Component {
 
   componentDidMount(){
     console.log('device control panel mounted');
-    var uuid = this.props.match.params.deviceId;
-    var userId = this.props.user.data._id;
-
-    this.setState({
-      uuid: uuid
-    }, () => {
-      var payload = {
-        uuid: uuid,
-        userId: userId
-      }
-      this.props.getDeviceInfo(payload);
-    })
+    if(this.props.match.params.deviceId === undefined){
+      return
+    }else{
+      var uuid = this.props.match.params.deviceId;
+      this.setState({
+        uuid: uuid
+      })
+    }
   }
 
   componentWillReceiveProps(nextProps){
     var deviceChange = false;
     if(this.props != nextProps){
-      console.log('new props');
-      console.log('params id: ', this.props.match.params.deviceId);
-
       if(this.props.match.params.deviceId != nextProps.match.params.deviceId){
         deviceChange = true;
       }
@@ -51,58 +40,29 @@ class DeviceControls extends React.Component {
       this.props = nextProps;
 
       if(deviceChange){
+        console.log('device changed');
+        // this.getDeviceInfo();
         var uuid = this.props.match.params.deviceId;
-        var userId = this.props.user.data._id;
-        var payload = {
-          uuid: uuid,
-          userId: userId
-        }
-        this.props.getDeviceInfo(payload);
+        this.setState({
+          uuid: uuid
+        }, () => {
+          console.log('new uuid: ', this.state.uuid);
+        })
       }
     }
   }
 
-  // renderDeviceInfo(){
-  //
-  //   if(this.props.user.currentDevice === undefined){
-  //     return (
-  //       <div>loading...</div>
-  //     )
-  //   }
-  //
-  //   var device = this.props.user.currentDevice;
-  //   var content = [];
-  //   Object.keys(device).forEach(key => {
-  //     var item = (
-  //       <div key={key}>
-  //         {key}: {device[key]}
-  //       </div>
-  //     )
-  //     content.push(item);
-  //   })
-  //
-  //   return (
-  //     <div>
-  //       {content}
-  //     </div>
-  //   )
-  // }
-
   render(){
-    // if(this.props.user.currentDevice === undefined){
-    //   return(
-    //     <div>loading...</div>
-    //   )
-    // }
-    //
-    // var device = this.props.user.currentDevice;
-    // var uuid = this.props.match.params.deviceId;
+    if(this.state.uuid === ''){
+      return (
+        <div>device controls loading...</div>
+      )
+    }
+
     return (
       <div>
         <DeviceInfo uuid={this.state.uuid}/>
-
-        {/* {this.renderDeviceInfo()} */}
-        <ListMedia />
+        <ListMedia deviceId={this.state.uuid}/>
       </div>)
   }
 }
@@ -115,8 +75,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    getDeviceInfo: bindActionCreators(getDeviceInfo, dispatch),
-    getUserMedia: bindActionCreators(getUserMedia, dispatch)
+
   }
 }
 
