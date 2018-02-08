@@ -38,7 +38,7 @@ var socketServer = {
 
           socket.device_id = action.payload.device_id;
           socket.owner_id = action.payload.owner_id;
-          socket.last_heartbeat = moment();
+          socket.last_heartbeat = localTimeNow;
 
           clearTimeout(this.heartbeatTimer);
           socketServer.restartHeartbeatTimer(io, socket);
