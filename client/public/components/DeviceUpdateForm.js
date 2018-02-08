@@ -36,19 +36,19 @@ class DeviceUpdateForm extends React.Component {
   }
 
   handleChange(e){
-    console.log('change');
+    // console.log('change');
     const key = e.target.name;
     const value = e.target.value;
 
     this.setState({
       [key]: value
     }, function(){
-      console.log(this.state);
+      // console.log(this.state);
     });
   }
 
   handleSubmit(e){
-    console.log('submit');
+    // console.log('submit');
 
     var payload = {
       owner: this.props.user.data.email,
@@ -58,7 +58,12 @@ class DeviceUpdateForm extends React.Component {
       uuid: this.state.uuid
     }
 
-    this.props.addDevice(payload);
+    this.setState({
+      deviceName: '',
+      uuid: ''
+    }, () => {
+      this.props.addDevice(payload);
+    })
   }
 
   render(){

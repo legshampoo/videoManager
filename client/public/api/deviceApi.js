@@ -27,3 +27,17 @@ export const getDeviceInfo = async (payload) => {
     })
   })
 }
+
+export const checkUUIDExists = async (payload) => {
+  const url = '/api/device/check-uuid-exists'
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}

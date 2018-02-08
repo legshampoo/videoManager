@@ -3,7 +3,9 @@ import {
   REQUEST_NEW_UUID_FAIL,
   UPDATE_UUID,
   DEVICE_GET_DEVICE_INFO_SUCCESS,
-  DEVICE_GET_DEVICE_INFO_FAIL
+  DEVICE_GET_DEVICE_INFO_FAIL,
+  CHECK_UUID_EXISTS_SUCCESS,
+  CHECK_UUID_EXISTS_FAIL
 } from '../actions/deviceActions';
 
 import {
@@ -11,7 +13,7 @@ import {
 } from '../utils/deviceUtils';
 
 const initialState = {
-
+  deviceCheck: false
 }
 
 function deviceReducer(state = initialState, action){
@@ -21,13 +23,28 @@ function deviceReducer(state = initialState, action){
       console.log(action);
       const uuid = action.payload.data.uuid;
 
-      saveUUID(uuid);
+      // saveIdToLocalStorage(uuid);
+      localStorage.setItem('uuid', uuid);
 
-      return Object.assign({}, state, {
+      return {
+        ...state,
         uuid: uuid
-      });
+      }
 
     case REQUEST_NEW_UUID_FAIL:
+      console.log(action);
+      return state
+
+    case CHECK_UUID_EXISTS_SUCCESS:
+      console.log(action);
+      return {
+        ...state,
+        deviceFound: action.payload.data.device_found,
+        uuid: action.payload.data.uuid,
+        deviceCheck: true
+      }
+
+    case CHECK_UUID_EXISTS_FAIL:
       console.log(action);
       return state
 
@@ -46,7 +63,7 @@ function deviceReducer(state = initialState, action){
         ...state,
         data: action.payload.data.data
       }
-      
+
     case DEVICE_GET_DEVICE_INFO_FAIL:
       console.log(action);
       return state

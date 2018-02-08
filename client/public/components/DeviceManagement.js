@@ -6,7 +6,7 @@ import {
   Route,
   withRouter
 } from 'react-router-dom';
-// import styles from '../css/app.css';
+import styles from '../css/app.css';
 
 import ListDevices from './ListDevices';
 import DeviceControls from './DeviceControls';
@@ -30,9 +30,9 @@ class DeviceManagement extends React.Component {
   render(){
     var user = this.props.user.data;
     return (
-      <div>
+      <div className={styles.genericContainerRow}>
         <ListDevices/>
-        <div>
+        <div className={styles.genericContainerColumn}>
           <Route path={`${this.props.match.path}/:deviceId`} component={DeviceControls} />
         </div>
       </div>)

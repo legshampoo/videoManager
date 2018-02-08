@@ -14,7 +14,9 @@ import {
   GET_DEVICE_INFO_SUCCESS,
   GET_DEVICE_INFO_FAIL,
   GET_USER_MEDIA_SUCCESS,
-  GET_USER_MEDIA_FAIL
+  GET_USER_MEDIA_FAIL,
+  UPDATE_DEVICE_SUCCESS,
+  UPDATE_DEVICE_FAIL
 } from '../actions/userActions';
 
 const initialState = {
@@ -117,6 +119,17 @@ function userReducer(state = initialState, action){
       }
 
     case GET_USER_MEDIA_FAIL:
+      console.log(action);
+      return state
+
+    case UPDATE_DEVICE_SUCCESS:
+      console.log(action);
+      return {
+        ...state,
+        currentDevice: action.payload.data.device
+      }
+
+    case UPDATE_DEVICE_FAIL:
       console.log(action);
       return state
 

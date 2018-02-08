@@ -21,23 +21,117 @@ body {
 .app {
   width: 100%;
   height: 100vh;
-  /*background-color: #4A494A;*/
-  background-color: black;
-  /*position: relative;*/
+  background-color: #AEB6BF;
   overflow: hidden;
-  /* color: white; */
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.container {
-  /*position: absolute;*/
-  /*width: 600px;*/
-  height: 100%;
-  /*color: white;*/
-  background-color: green;
-  /*color: white;*/
-  /*margin: 1000px auto;*/
-  /*margin-left: 100px;*/
+.loginContainer {
+  padding: 50px;
+  border-radius: 30px;
+  border-width: 2px;
+  border-color: black;
+  background-color: #BDC3C7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
+
+.dashboardContainer {
+  width: 100%;
+  margin: 10px;
+  height: 100%;
+  background-color: #979A9A;
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+.dashboardContent {
+  width: 98%;
+  height: 100%;
+  margin: auto;
+  background-color: #A2A2A2;
+  /* background-color: red; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-top: 50px;
+  /* border: 1px solid white; */
+}
+
+.genericContainerColumn {
+  width: 100%;
+  height: 100%;
+  /* background-color: green; */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.genericContainerRow {
+  width: 100%;
+  height: 100%;
+  /* background-color: green; */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  /* border: 1px solid white; */
+}
+
+.containerCentered {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* border: 1px solid white; */
+}
+
+.deviceControls {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-row-gap: 10px;
+  grid-template-columns: 500px 400px 200px;
+  grid-template-rows: 300px;
+  background-color: #898989;
+}
+
+.deviceList {
+  width: 200px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #404040;
+  border: 1px solid white;
+  border-radius: 10px;
+}
+
+.formContainer {
+  width: 100%;
+  background-color: #878787;
+  /* background-color: green; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
+  border-radius: 20px;
+  /* display: grid; */
+  /* grid-template-rows: repeat(5, 1fr); */
+  /* grid-template-rows: 100px 100px 100px 100px; */
+  /* grid-gap: 20px; */
+  /* border: 1px solid white; */
+}
+
 
 .videoPlayer {
   /*width: auto;*/

@@ -7,7 +7,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-// import styles from '../css/app.css';
+import styles from '../css/app.css';
 import AppBar from 'material-ui/AppBar';
 import DropDownMenu from 'material-ui/DropDownMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -20,10 +20,14 @@ import UploadVideo from './UploadVideo';
 import DeviceManagement from './DeviceManagement';
 import LogoutForm from './LogoutForm';
 import AddDevice from './AddDevice';
+import DashboardLanding from './DashboardLanding';
+import { joinRoom } from '../actions/socketActions';
 
 class DashboardHome extends React.Component {
   constructor(props){
     super(props);
+
+    this.joinRoom = this.joinRoom.bind(this);
   }
 
   componentDidMount(){
@@ -33,16 +37,32 @@ class DashboardHome extends React.Component {
     }else{
       // console.log('User is Authorized');
     }
+
+    this.joinRoom();
   }
 
   componentWillReceiveProps(nextProps){
     if(this.props != nextProps){
       this.props = nextProps;
       if(!this.props.user.authorized){
-        console.log('Unauthorized, redirect to login page');
+        // console.log('Unauthorized, redirect to login page');
         this.props.history.push('/dashboard/login');
       }
     }
+  }
+
+  joinRoom(){
+    // console.log('joining socket room');
+    // console.log('user id: ', this.props.user.data._id);
+    const owner_id = this.props.user.data._id;
+    const owner_email = this.props.user.data.email;
+
+    var payload = {
+      owner_id: owner_id,
+      device_id: owner_email
+    }
+
+    this.props.joinRoom(payload);
   }
 
   handleClick_dropDown(event, path, value){
@@ -51,7 +71,7 @@ class DashboardHome extends React.Component {
 
   render(){
     return (
-      <div>
+      <div className={styles.dashboardContainer}>
         <AppBar
           title='Dashboard'
           showMenuIconButton={false}
@@ -75,9 +95,12 @@ class DashboardHome extends React.Component {
           Email: {this.props.user.data.email} <br />
           <LogoutForm />
         </AppBar>
-        <Route path={`${this.props.match.path}/upload`} component={UploadVideo} />
-        <Route path={`${this.props.match.path}/add-device`} component={AddDevice} />
-        <Route path={`${this.props.match.path}/manage-devices`} component={DeviceManagement} />
+        <div className={styles.dashboardContent}>
+          <Route exact path={`${this.props.match.path}/`} component={DashboardLanding} />
+          <Route path={`${this.props.match.path}/upload`} component={UploadVideo} />
+          <Route path={`${this.props.match.path}/add-device`} component={AddDevice} />
+          <Route path={`${this.props.match.path}/manage-devices`} component={DeviceManagement} />
+        </div>
       </div>)
   }
 }
@@ -90,7 +113,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-
+    joinRoom: bindActionCreators(joinRoom, dispatch)
   }
 }
 

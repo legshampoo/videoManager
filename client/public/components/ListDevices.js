@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
 import {
   BrowserRouter as Router,
   Route,
@@ -10,6 +12,7 @@ import {
   withRouter
 } from 'react-router-dom';
 
+import styles from '../css/app.css';
 
 import { getDevices } from '../actions/userActions';
 
@@ -18,6 +21,10 @@ class ListDevices extends React.Component {
     super(props);
 
     this.handleClick = this.handleClick.bind(this);
+
+    this.state = {
+      selected: ''
+    }
   }
 
   componentDidMount(){
@@ -38,7 +45,13 @@ class ListDevices extends React.Component {
 
   handleClick(deviceId){
     var path = this.props.match.path + '/' + deviceId;
-    this.props.history.push(path);
+
+    this.setState({
+      selected: deviceId
+    }, () => {
+      // console.log('selected: ', this.state.selected);
+      this.props.history.push(path);
+    })
   }
 
   renderDeviceData(){
@@ -59,11 +72,13 @@ class ListDevices extends React.Component {
       var name = devices[key].deviceName;
 
       let item = (
-        <FlatButton
+        <RaisedButton
           key={key}
-          onClick={() => this.handleClick(id)} >
+          onClick={() => this.handleClick(id)}
+          backgroundColor={ this.state.selected != id ? '#D4D4D4' : '#7CA8FF'}
+          style={buttonStyles}>
             {name}
-          </FlatButton>
+          </RaisedButton>
       )
       content.push(item);
     })
@@ -77,11 +92,17 @@ class ListDevices extends React.Component {
 
   render(){
     return (
-      <div>
-        List Devices <br />
+      <div className={styles.deviceList}>
+        <h3>Devices</h3>
         {this.renderDeviceData()}
       </div>)
   }
+}
+
+const buttonStyles = {
+  width: 150,
+  marginTop: 10,
+  marginLeft: 10
 }
 
 const mapStateToProps = (state, ownProps) => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
+import styles from '../css/app.css';
 
 // import RegisterUserForm from './RegisterUserForm';
 import UploadVideoForm from './UploadVideoForm';
@@ -12,7 +12,7 @@ class UploadVideo extends React.Component {
   }
 
   componentDidMount(){
-    console.log('uploadVideo mounted');
+    // console.log('uploadVideo mounted');
   }
 
   componentWillReceiveProps(nextProps){

@@ -414,3 +414,24 @@ exports.updateDevice = (req, res) => {
 			res.send(err);
 		})
 }
+
+exports.deleteContent = (req, res) => {
+	console.log('delete content here');
+	console.log(req.body);
+// process.env.DIGITALOCEAN_BUCKET
+	// var params = {
+	// 	Bucket: process.env.DIGITALOCEAN_BUCKET,
+	// 	Key: req.body.location
+	// }
+  //
+	// s3.deleteObject(params, (response, err) => {
+	// 	console.log(response);
+	// 	if(err){
+	// 		console.log(err);
+	// 	}else{
+	// 		console.log('ok fine then');
+	// 		res.send('ok good');
+	// 	}
+  //
+	// })
+}

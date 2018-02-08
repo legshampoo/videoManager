@@ -11,6 +11,10 @@ router.post('/device/get-device-info',
   deviceController.getDeviceInfo
 );
 
+router.post('/device/check-uuid-exists',
+  deviceController.checkUUIDExists
+);
+
 router.post('/user/login',
   authController.authenticate,
   userController.login
@@ -49,6 +53,10 @@ router.post('/user/get-user-media',
 
 router.post('/user/update-device',
   userController.updateDevice
+);
+
+router.post('/user/delete-content',
+  userController.deleteContent
 );
 
 

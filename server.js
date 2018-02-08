@@ -13,6 +13,9 @@ const session = require('express-session');
 
 const app = express();
 
+const io = require('socket.io')();
+const socketServer = require('./server/handlers/socketServer');
+
 const DEFAULT_PORT = 3000;
 const env = process.env.NODE_ENV || 'NOT DEFINED';
 app.set("port", process.env.PORT || DEFAULT_PORT);
@@ -94,12 +97,19 @@ if(env == 'development'){
 }
 
 app.get('*', (req, res) => {
-  console.log('got request');
+  // console.log('got request');
   var clientHostname = req.headers.host;
-  console.log('Hostname: ' + clientHostname);
+  // console.log('Hostname: ' + clientHostname);
   res.sendFile(__dirname + '/client/dist/index.html');
 });
 
-app.listen(app.get('port'), function () {
-  console.log('Example app listening on port ' + app.get('port') + '!\n');
-});
+const server = app.listen(app.get('port'), '0.0.0.0', function() {
+  console.log('HTTP Server listening on port ' + app.get('port') + '!\n');
+  io.listen(server);
+  socketServer.init(io);
+})
+
+// app.listen(app.get('port'), '192.168.1.8', function () {
+//   console.log('Example app listening on port ' + app.get('port') + '!\n');
+//
+// });

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
+import styles from '../css/app.css';
 
 import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
@@ -16,7 +16,7 @@ class DeviceInfo extends React.Component {
   }
 
   componentDidMount(){
-    console.log('device info mounted');
+    // console.log('device info mounted');
     if(this.props.uuid === undefined){
       return
     }
@@ -32,14 +32,14 @@ class DeviceInfo extends React.Component {
       userId: userId
     }
 
-    console.log('payload before sending', payload);
+    // console.log('payload before sending', payload);
     this.props.getDeviceInfo(payload);
   }
 
   componentWillReceiveProps(nextProps){
     var uuidChange = false;
     if(this.props != nextProps){
-      console.log('device info new props');
+      // console.log('device info new props');
       if(this.props.uuid != nextProps.uuid){
         uuidChange = true
       }

@@ -4,20 +4,21 @@ import { connect } from 'react-redux';
 // import styles from '../css/app.css';
 
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
 import DeviceUpdateForm from './DeviceUpdateForm';
 import ListDevices from './ListDevices';
 
-import { getUserMedia, updateDevice } from '../actions/userActions';
+import { getUserMedia, updateDevice, deleteContent } from '../actions/userActions';
 
 class ListMedia extends React.Component {
   constructor(props){
     super(props);
     this.getUserMedia = this.getUserMedia.bind(this);
     this.handleClick = this.handleClick.bind(this);
+
   }
 
   componentDidMount(){
-    console.log('list media mounted')
     if(this.props.user.data._id === undefined){
       return
     }
@@ -25,7 +26,6 @@ class ListMedia extends React.Component {
   }
 
   getUserMedia(){
-    console.log('get user media');
     var userId = this.props.user.data._id;
     var payload = {
       userId: userId
@@ -40,6 +40,7 @@ class ListMedia extends React.Component {
       if(this.props.user.data._id != nextProps.user.data._id){
         idChanged = true;
       }
+
       this.props = nextProps;
 
       if(idChanged){
@@ -49,15 +50,22 @@ class ListMedia extends React.Component {
   }
 
   handleClick(location){
-    console.log('location', location);
-    console.log('update device: ', this.props.deviceId);
-
     var payload = {
       uuid: this.props.deviceId,
       currentMedia: location
     }
 
     this.props.updateDevice(payload);
+  }
+
+  handleClick_deleteContent(location){
+    console.log('delete content: ', location);
+
+    var payload = {
+      location: location
+    }
+
+    this.props.deleteContent(payload);
   }
 
   renderMedia(){
@@ -74,18 +82,35 @@ class ListMedia extends React.Component {
     var media = this.props.user.media;
     let content = [];
     media.forEach((m, index) => {
-      // console.log(m);
       var location = m.location;
+      var buttonColor = '#D4D4D4';
+      if(this.props.user.currentDevice === undefined){
+        //do nothing
+      }else{
+        if(this.props.user.currentDevice.currentMedia === m.location){
+          buttonColor = '#7CA8FF'
+        }
+      }
+
       let item = (
-        <FlatButton
+        <div
           key={index}
-          style={{height: 100, width: 300}}
-          onClick={() => this.handleClick(location)}>
-          <div>
-            Title: {m.title}<br />
-            Description: {m.description}<br />
-          </div>
-        </FlatButton>
+          style={buttonStyles}>
+          <RaisedButton
+            key={index}
+            style={{height: 100, width: 300}}
+            label={m.title}
+            backgroundColor={buttonColor}
+            onClick={() => this.handleClick(location)}>
+          </RaisedButton>
+          {/* <RaisedButton
+            key={index + '_delete'}
+            label='Delete Content'
+            onClick={() => this.handleClick_deleteContent(location)}
+            >
+
+          </RaisedButton> */}
+        </div>
       )
 
       content.push(item);
@@ -97,6 +122,7 @@ class ListMedia extends React.Component {
   }
 
   render(){
+    // console.log(this.props.user.currentDevice);
     return (
       <div>
         <h3>List Media </h3>
@@ -105,16 +131,22 @@ class ListMedia extends React.Component {
   }
 }
 
+const buttonStyles = {
+  marginTop: 10
+}
+
 const mapStateToProps = (state, ownProps) => {
   return {
-    user: state.user
+    user: state.user,
+    // currentDevice: state.currentDevice
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     getUserMedia: bindActionCreators(getUserMedia, dispatch),
-    updateDevice: bindActionCreators(updateDevice, dispatch)
+    updateDevice: bindActionCreators(updateDevice, dispatch),
+    deleteContent: bindActionCreators(deleteContent, dispatch)
   }
 }
 

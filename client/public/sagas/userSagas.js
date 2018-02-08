@@ -14,7 +14,8 @@ import {
   getDevices,
   getDeviceInfo,
   getUserMedia,
-  updateDevice
+  updateDevice,
+  deleteContent
 } from '../api/userApi';
 
 import {
@@ -44,7 +45,10 @@ import {
   GET_USER_MEDIA_FAIL,
   UPDATE_DEVICE,
   UPDATE_DEVICE_SUCCESS,
-  UPDATE_DEVICE_FAIL
+  UPDATE_DEVICE_FAIL,
+  DELETE_CONTENT,
+  DELETE_CONTENT_SUCCESS,
+  DELETE_CONTENT_FAIL
 } from '../actions/userActions';
 
 function * user_login(action){
@@ -182,6 +186,21 @@ function * update_device(action){
   }
 }
 
+function * delete_content(action){
+  try{
+    const response = yield call(deleteContent, action.payload);
+    yield put({
+      type: DELETE_CONTENT_SUCCESS,
+      payload: response
+    });
+  }catch(e){
+    yield put({
+      type: DELETE_CONTENT_FAIL,
+      payload: e
+    });
+  }
+}
+
 function * sagas(){
   yield takeEvery('USER_LOGIN', user_login);
   yield takeEvery('USER_REGISTER', user_register);
@@ -192,6 +211,7 @@ function * sagas(){
   yield takeEvery('GET_DEVICE_INFO', get_device_info);
   yield takeEvery('GET_USER_MEDIA', get_user_media);
   yield takeEvery('UPDATE_DEVICE', update_device);
+  yield takeEvery('DELETE_CONTENT', delete_content);
 }
 
 export default sagas;

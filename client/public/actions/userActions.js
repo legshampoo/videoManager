@@ -25,6 +25,9 @@ export const GET_USER_MEDIA_FAIL = 'GET_USER_MEDIA_FAIL';
 export const UPDATE_DEVICE = 'UPDATE_DEVICE';
 export const UPDATE_DEVICE_SUCCESS = 'UPDATE_DEVICE_SUCCESS';
 export const UPDATE_DEVICE_FAIL = 'UPDATE_DEVICE_FAIL';
+export const DELETE_CONTENT = 'DELETE_CONTENT';
+export const DELETE_CONTENT_SUCCESS = 'DELETE_CONTENT_SUCCESS';
+export const DELETE_CONTENT_FAIL = 'DELETE_CONTENT_FAIL';
 
 export function userLogin(values){
   console.log('DISPATCH: ', USER_LOGIN);
@@ -102,6 +105,15 @@ export function updateDevice(values){
 
   return {
     type: UPDATE_DEVICE,
+    payload: values
+  }
+}
+
+export function deleteContent(values){
+  console.log('DISPATCH: ', DELETE_CONTENT);
+
+  return {
+    type: DELETE_CONTENT,
     payload: values
   }
 }

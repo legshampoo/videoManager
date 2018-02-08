@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-// import styles from '../css/app.css';
+import styles from '../css/app.css';
 
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -30,10 +30,10 @@ class UploadVideoForm extends React.Component {
 
   componentWillReceiveProps(nextProps){
     if(this.props != nextProps){
-      console.log('new props');
+      // console.log('new props');
       this.props = nextProps;
 
-      console.log('user id: ', this.props.user.data._id);
+      // console.log('user id: ', this.props.user.data._id);
     }
   }
 
@@ -44,7 +44,7 @@ class UploadVideoForm extends React.Component {
     this.setState({
       [key]: value
     }, function(){
-      console.log(this.state);
+      // console.log(this.state);
     });
   }
 
@@ -52,14 +52,14 @@ class UploadVideoForm extends React.Component {
     this.setState({
       file: filesArray[0]
     }, function(){
-      console.log('file set: ', this.state.file);
+      // console.log('file set: ', this.state.file);
     });
   }
 
   handleSubmit(e){
     e.preventDefault();
-    console.log('submit');
-    console.log(this.state);
+    // console.log('submit');
+    // console.log(this.state);
     var form = new FormData();
 
     form.append('title', this.state.title);
@@ -74,26 +74,33 @@ class UploadVideoForm extends React.Component {
 
   render(){
     return (
-      <div>
-        UploadVideoForm
+      <div className={styles.genericContainer}>
         <form
+          className={styles.formContainer}
           encType='multipart/form-data'>
-          <input type='file'
-              name='file'
-              onChange={ (e) => this.handleFileChange(e.target.files) } />
+          <div style={{'padding': 20}}>
+            <h2>Upload Video</h2>
+          </div>
+          <input
+            type='file'
+            name='file'
+            onChange={ (e) => this.handleFileChange(e.target.files) } />
           <TextField
             name='title'
             floatingLabelText='Title'
             value={this.state.title}
-            onChange={this.handleFormChange} />
+            onChange={this.handleFormChange}
+            style={{'width': 400}} />
           <TextField
             name='description'
             floatingLabelText='Description'
             value={this.state.description}
-            onChange={this.handleFormChange} />
+            onChange={this.handleFormChange}
+            style={{'width': 400}} />
           <RaisedButton
             label='Upload'
-            onClick={(e) => this.handleSubmit(e)} />
+            onClick={(e) => this.handleSubmit(e)}
+            style={{'margin': 20}}/>
         </form>
       </div>)
   }
