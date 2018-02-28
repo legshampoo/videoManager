@@ -11,20 +11,6 @@ const Media = mongoose.model('Media');
 
 const promisify = require('es6-promisify');
 
-//file upload stuff
-const aws = require('aws-sdk');
-const multer = require('multer');
-const multerS3 = require('multer-s3');
-const VIDEOS_FILE_PATH = '/videos/';
-// const spacesEndpoint = new aws.Endpoint('nyc3.digitaloceanspaces.com');
-const spacesEndpoint = new aws.Endpoint(process.env.DIGITALOCEAN_STORAGE_ENDPOINT + VIDEOS_FILE_PATH);
-
-const s3 = new aws.S3({
-	endpoint: spacesEndpoint,
-	accessKeyId: process.env.DIGITALOCEAN_STORAGE_KEY,
-	secretAccessKey: process.env.DIGITALOCEAN_STORAGE_SECRET
-});
-
 
 exports.attemptedLoginDetection = function(req, res, next){
 	console.log('User attempting to login...');
@@ -154,102 +140,6 @@ exports.logout = (req, res) => {
 	res.send(response);
 }
 
-
-const upload = multer({
-	storage: multerS3({
-		s3: s3,
-		bucket: process.env.DIGITALOCEAN_BUCKET,
-		acl: 'public-read',
-		key: (request, file, cb) => {
-			console.log('original name: ', file.originalname);
-			var date = moment().local().format('YYYY-MM-DD HH:mm').toString();
-			var fileName = date + '_' + file.originalname;
-			fileName = fileName.replace(/ /g, '_');
-			console.log('processed name: ', fileName);
-			cb(null, fileName);
-		}
-	})
-}).array('file', 1);
-
-
-exports.uploadVideo = async (req, res) => {
-	console.log('UPLOAD');
-
-	upload(req, res, (error) => {
-		if(error){
-			console.log(error);
-			var payload = {
-				api: {
-					success: false,
-					message: 'File upload error',
-					error: error
-				}
-			}
-
-			return res.send(payload);
-		}
-		// console.log('req.file: ', req.file);
-  	console.log('req.files: ', req.files);
-		console.log('req.file[0]: ', req.files[0]);
-		console.log('req.body: ', req.body);
-
-		console.log('file location: ', req.files[0].location);
-
-		console.log('success');
-		const date = moment().local().format('YYYY-MM-DD HH:mm').toString();
-
-		var path = req.files[0].location + VIDEOS_FILE_PATH + req.files[0].key;
-		console.log('THE FULL PATH: ', path);
-		const media = new Media({
-			type: 'video',
-			owner_id: req.body.userId,
-			owner_email: req.body.userEmail,
-			created_at: date,
-			title: req.body.title,
-			description: req.body.description,
-			location: path
-		});
-
-		media.save()
-			.then(r => {
-				console.log('media saved');
-
-				var query = { _id: req.body.userId };
-				var options = {
-					$addToSet: {
-						media: {
-							content_id: r._id.toString(),
-							location: r.location,
-							title: r.title
-						}
-					}
-				}
-
-				User.findOneAndUpdate(query, options, { new : true })
-					.then(data => {
-						console.log('media added to user library');
-						var payload = {
-							api: {
-								success: true,
-								message: 'File upload successful'
-							}
-						}
-
-						res.send(payload);
-					})
-					.catch(err => {
-						console.log(err);
-						res.send(err);
-					})
-			})
-			.catch(err => {
-				console.log(err);
-				res.send(err);
-			})
-	})
-}
-
-
 exports.addDevice = async (req, res) => {
 	console.log('/user/add-device');
 	console.log('req.body', req.body);
@@ -328,7 +218,7 @@ exports.getDevices = async (req, res) => {
 	}
 
 	Device.find({
-		ownerId: req.body.id
+			ownerId: req.body.id
 		})
 		.then(data => {
 			console.log('Get Devices');
@@ -415,23 +305,44 @@ exports.updateDevice = (req, res) => {
 		})
 }
 
-exports.deleteContent = (req, res) => {
-	console.log('delete content here');
-	console.log(req.body);
-// process.env.DIGITALOCEAN_BUCKET
-	// var params = {
-	// 	Bucket: process.env.DIGITALOCEAN_BUCKET,
-	// 	Key: req.body.location
-	// }
-  //
-	// s3.deleteObject(params, (response, err) => {
-	// 	console.log(response);
-	// 	if(err){
-	// 		console.log(err);
-	// 	}else{
-	// 		console.log('ok fine then');
-	// 		res.send('ok good');
-	// 	}
-  //
-	// })
+exports.togglePlayLocal = async (req, res) => {
+	console.log('Toggle Play Local');
+	console.log(req.body.device_id);
+
+
+	const isStreaming = await Device.find({
+			uuid: req.body.device_id
+		})
+		.then(data => {
+			console.log(data);
+			return data[0].streamContent;
+		})
+		.catch(err => {
+			console.log(err);
+		})
+
+	var query = { uuid: req.body.device_id };
+	var options = {
+		$set: {
+			streamContent: !isStreaming
+		}
+	}
+
+	Device.findOneAndUpdate(query, options, { new: true })
+		.then(data => {
+			console.log('updated');
+			console.log(data);
+
+			var payload = {
+				api: 'successful',
+				message: 'Streaming content toggled',
+				device: data
+			}
+
+			res.send(payload);
+		})
+		.catch(err => {
+			console.log(err);
+			res.send(err);
+		})
 }

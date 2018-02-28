@@ -53,6 +53,7 @@ export const userLogout = async (payload) => {
 
 export const uploadVideo = async (payload) => {
   const url = '/api/user/upload/video';
+  console.log('api: ', payload);
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)
@@ -137,6 +138,20 @@ export const updateDevice = async (payload) => {
 
 export const deleteContent = async (payload) => {
   const url = '/api/user/delete-content';
+
+  return new Promise((fulfill, reject) => {
+    axios.post(url, payload)
+    .then(res => {
+      fulfill(res);
+    })
+    .catch(err => {
+      reject(err);
+    })
+  })
+}
+
+export const togglePlayLocal = async (payload) => {
+  const url = '/api/user/toggle-play-local';
 
   return new Promise((fulfill, reject) => {
     axios.post(url, payload)

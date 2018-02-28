@@ -11,17 +11,30 @@ import ListDevices from './ListDevices';
 import DeviceInfo from './DeviceInfo';
 import ListMedia from './ListMedia';
 
-import { sendDeviceRefresh } from '../actions/socketActions';
+import {
+  sendDeviceRefresh,
+  sendDeviceRestart,
+  pushDeviceContent
+} from '../actions/socketActions';
+
+import {
+  togglePlayLocal
+} from '../actions/userActions';
+
 
 class DeviceControls extends React.Component {
   constructor(props){
     super(props);
 
     this.sendDeviceRefresh = this.sendDeviceRefresh.bind(this);
+    this.sendDeviceRestart = this.sendDeviceRestart.bind(this);
+    this.handlePlayLocalFile = this.handlePlayLocalFile.bind(this);
+    this.handlePushDeviceContent = this.handlePushDeviceContent.bind(this);
 
     this.state = {
       uuid: '',
-      heartbeatStatus: 'waiting'
+      heartbeatStatus: 'waiting',
+      playLocal: false
     }
   }
 
@@ -32,8 +45,6 @@ class DeviceControls extends React.Component {
       var uuid = this.props.match.params.deviceId;
       this.setState({
         uuid: uuid
-      }, () => {
-        // console.log('set state in didmount');
       })
     }
   }
@@ -51,19 +62,13 @@ class DeviceControls extends React.Component {
         var uuid = this.props.match.params.deviceId;
         this.setState({
           uuid: uuid
-        }, () => {
-          // console.log('new uuid: ', this.state.uuid);
         })
       }
 
       if(this.props.sockets.heartbeats === undefined){
-        console.log('fine');
       }else{
-        // console.log(this.state.uuid);
         const status = this.props.sockets.heartbeats[this.state.uuid];
-        // console.log(status);
         if(status === 'alive'){
-          // console.log('alive');
           this.setState({
             heartbeatStatus: 'alive'
           })
@@ -108,11 +113,48 @@ class DeviceControls extends React.Component {
     this.props.sendDeviceRefresh(payload);
   }
 
+  sendDeviceRestart(){
+    var payload = {
+      device_id: this.state.uuid
+    }
+
+    this.props.sendDeviceRestart(payload);
+  }
+
+  handlePushDeviceContent(){
+    const path = this.props.user.currentDevice.currentMedia;
+
+    var payload = {
+      device_id: this.state.uuid,
+      content_path: path
+    }
+
+    this.props.pushDeviceContent(payload);
+  }
+
+  handlePlayLocalFile(){
+    console.log('play local pressed');
+
+    var payload = {
+      device_id: this.state.uuid
+    }
+
+    this.props.togglePlayLocal(payload);
+
+  }
+
   render(){
     if(this.state.uuid === ''){
       return (
         <div>device controls loading...</div>
       )
+    }
+
+    var streaming = false;
+    if(this.props.user.currentDevice === undefined){
+      // console.log('no current yet');
+    }else{
+      streaming = this.props.user.currentDevice.streamContent;
     }
 
     return (
@@ -124,6 +166,19 @@ class DeviceControls extends React.Component {
           <RaisedButton
             onClick={this.sendDeviceRefresh}
             label='Refresh Device'
+            style={{width: 200, height: 50}}/>
+          <RaisedButton
+            onClick={this.sendDeviceRestart}
+            label='Restart Device'
+            style={{width: 200, height: 50}}/>
+          <RaisedButton
+            onClick={this.handlePlayLocalFile}
+            label={streaming ? 'Streaming' : 'Local Playback'}
+            backgroundColor={streaming ? 'gray' : 'red'}
+            style={{width: 200, height: 50}}/>
+          <RaisedButton
+            onClick={this.handlePushDeviceContent}
+            label='Push Media to Device'
             style={{width: 200, height: 50}}/>
         </div>
       </div>)
@@ -170,13 +225,17 @@ const waiting = {
 const mapStateToProps = (state, ownProps) => {
   return {
     user: state.user,
-    sockets: state.sockets
+    sockets: state.sockets,
+    device: state.device
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    sendDeviceRefresh: bindActionCreators(sendDeviceRefresh, dispatch)
+    sendDeviceRefresh: bindActionCreators(sendDeviceRefresh, dispatch),
+    sendDeviceRestart: bindActionCreators(sendDeviceRestart, dispatch),
+    togglePlayLocal: bindActionCreators(togglePlayLocal, dispatch),
+    pushDeviceContent: bindActionCreators(pushDeviceContent, dispatch)
   }
 }
 

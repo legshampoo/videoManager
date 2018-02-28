@@ -51,6 +51,21 @@ function socketReducer(state = initialState, action){
       window.location.reload()
       return state
 
+    case 'restart':
+      console.log(action);
+      console.log('TODO');
+      return state
+
+    case 'push-device-content':
+      console.log(action);
+      window.open(action.payload.content_path);
+
+      setTimeout(() => {
+        window.close();
+      }, 2000);
+
+      return state
+
     default:
       return state
   }

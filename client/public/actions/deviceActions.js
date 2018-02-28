@@ -8,6 +8,7 @@ export const CHECK_UUID_EXISTS_FAIL = 'CHECK_UUID_EXISTS_FAIL';
 export const DEVICE_GET_DEVICE_INFO = 'DEVICE_GET_DEVICE_INFO';
 export const DEVICE_GET_DEVICE_INFO_SUCCESS = 'DEVICE_GET_DEVICE_INFO_SUCCESS';
 export const DEVICE_GET_DEVICE_INFO_FAIL = 'DEVICE_GET_DEVICE_INFO_FAIL';
+export const RESTART_DEVICE = 'local/restart';
 
 export function requestUUID(values){
   console.log('DISPATCH: ', REQUEST_NEW_UUID);
@@ -39,6 +40,14 @@ export function getDeviceInfo(values){
   console.log('DISPATCH: ', DEVICE_GET_DEVICE_INFO);
   return {
     type: DEVICE_GET_DEVICE_INFO,
+    payload: values
+  }
+}
+
+export function restart(values){
+  console.log('DISPATCH: ', RESTART_DEVICE);
+  return {
+    type: RESTART_DEVICE,
     payload: values
   }
 }

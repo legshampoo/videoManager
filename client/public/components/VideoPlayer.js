@@ -18,8 +18,9 @@ class VideoPlayer extends React.Component {
 
   componentDidMount(){
     console.log('videoplayer mounted');
-    // this.initHeartbeat();
-    // this.joinRoom();
+    var payload = {
+      message: 'trying to connect'
+    }
   }
 
   componentWillReceiveProps(nextProps){
@@ -84,9 +85,17 @@ class VideoPlayer extends React.Component {
       )
     }
 
-    var location = this.props.device.data.currentMedia;
-    // console.log(this.props.device.data)
-    var location = 'http://' + this.props.device.data.currentMedia;
+    var location = '';
+
+    if(this.props.device.data.streamContent){
+      location = this.props.device.data.currentMedia;
+    }else{
+      var remotePath = this.props.device.data.currentMedia;
+      var strArray = remotePath.split('/');
+      var fileName = strArray[strArray.length - 1];
+      var path = this.props.device.LOCAL_SERVER_URI + '/video/' + fileName;
+      location = path;
+    }
 
     return (
       <div styles={styles.container}>

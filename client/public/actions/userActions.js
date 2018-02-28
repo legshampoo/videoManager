@@ -28,6 +28,9 @@ export const UPDATE_DEVICE_FAIL = 'UPDATE_DEVICE_FAIL';
 export const DELETE_CONTENT = 'DELETE_CONTENT';
 export const DELETE_CONTENT_SUCCESS = 'DELETE_CONTENT_SUCCESS';
 export const DELETE_CONTENT_FAIL = 'DELETE_CONTENT_FAIL';
+export const TOGGLE_PLAY_LOCAL = 'TOGGLE_PLAY_LOCAL';
+export const TOGGLE_PLAY_LOCAL_SUCCESS = 'TOGGLE_PLAY_LOCAL_SUCCESS';
+export const TOGGLE_PLAY_LOCAL_FAIL = 'TOGGLE_PLAY_LOCAL_FAIL';
 
 export function userLogin(values){
   console.log('DISPATCH: ', USER_LOGIN);
@@ -114,6 +117,15 @@ export function deleteContent(values){
 
   return {
     type: DELETE_CONTENT,
+    payload: values
+  }
+}
+
+export function togglePlayLocal(values){
+  console.log('DISPATCH: ', TOGGLE_PLAY_LOCAL);
+
+  return {
+    type: TOGGLE_PLAY_LOCAL,
     payload: values
   }
 }

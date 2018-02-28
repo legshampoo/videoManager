@@ -16,7 +16,9 @@ import {
   GET_USER_MEDIA_SUCCESS,
   GET_USER_MEDIA_FAIL,
   UPDATE_DEVICE_SUCCESS,
-  UPDATE_DEVICE_FAIL
+  UPDATE_DEVICE_FAIL,
+  TOGGLE_PLAY_LOCAL_SUCCESS,
+  TOGGLE_PLAY_LOCAL_FAIL
 } from '../actions/userActions';
 
 const initialState = {
@@ -130,6 +132,17 @@ function userReducer(state = initialState, action){
       }
 
     case UPDATE_DEVICE_FAIL:
+      console.log(action);
+      return state
+
+    case TOGGLE_PLAY_LOCAL_SUCCESS:
+      console.log(action);
+      return {
+        ...state,
+        currentDevice: action.payload.data.device
+      }
+
+    case TOGGLE_PLAY_LOCAL_FAIL:
       console.log(action);
       return state
 

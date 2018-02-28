@@ -24,9 +24,9 @@ class DeviceLogin extends Component {
 
       if(this.props.device.deviceCheck){
         if(this.props.device.deviceFound){
-          console.log('device found');
+          // console.log('device found');
           var uuid = this.props.device.uuid;
-          console.log('the uuid is this yall: ', uuid);
+          // console.log('the uuid is this yall: ', uuid);
           var deviceHome = '/device/' + uuid;
           this.props.history.push(deviceHome);
         }else{

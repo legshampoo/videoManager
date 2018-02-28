@@ -89,4 +89,4 @@ userSchema.methods.validPassword = function(pwd, cb){
 //prettifies mongodb errors for better logging
 userSchema.plugin(mongodbErrorHandler);
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema, 'users');

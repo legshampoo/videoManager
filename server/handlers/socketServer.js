@@ -51,7 +51,7 @@ var socketServer = {
           connections.forEach(c => {
             if(c.device_id === undefined){return};
             if(action.payload.device_id === c.device_id){
-              console.log('yes send refresh to: ', c.device_id);
+              console.log('send refresh to: ', c.device_id);
               var payload = {
                 time: Date.now()
               };
@@ -60,6 +60,43 @@ var socketServer = {
                 type: 'refresh',
                 payload: payload
               });
+            }
+          })
+        }
+
+        if(action.type === 'server/device-restart'){
+          console.log('SOCKET GOT A DEVICE RESTART');
+          console.log(action.payload);
+
+          connections.forEach(c => {
+            if(c.device_id === undefined){return};
+            if(action.payload.device_id === c.device_id){
+              console.log('send restart to: ', c.device_id);
+              var payload = {
+                time: Date.now()
+              }
+
+              c.emit('action', {
+                type: 'restart',
+                payload: payload
+              })
+            }
+          })
+        }
+
+        if(action.type === 'server/push-device-content'){
+          console.log('SOCKET: Received push-device-content');
+          console.log(action.payload);
+
+          connections.forEach(c => {
+            if(c.device_id === undefined){return};
+            if(action.payload.device_id === c.device_id){
+              console.log('Push content to: ', c.device_id);
+
+              c.emit('action', {
+                type: 'push-device-content',
+                payload: action.payload
+              })
             }
           })
         }

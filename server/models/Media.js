@@ -23,4 +23,4 @@ mediaSchema.pre('save', function(next){
 
 mediaSchema.plugin(mongodbErrorHandler);
 
-module.exports = mongoose.model('Media', mediaSchema);
+module.exports = mongoose.model('Media', mediaSchema, 'medias');

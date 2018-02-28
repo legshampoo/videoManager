@@ -4,6 +4,7 @@ const router = express.Router();
 const deviceController = require('../controllers/deviceController');
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const uploadController = require('../controllers/uploadController');
 
 router.post('/device/request-new-uuid', deviceController.registerDevice);
 
@@ -31,8 +32,12 @@ router.post('/user/register',
   userController.login
 );
 
+// router.post('/user/upload/video',
+//   userController.uploadVideo
+// );
+
 router.post('/user/upload/video',
-  userController.uploadVideo
+  uploadController.uploadVideo
 );
 
 router.post('/user/add-device',
@@ -55,8 +60,12 @@ router.post('/user/update-device',
   userController.updateDevice
 );
 
-router.post('/user/delete-content',
-  userController.deleteContent
+// router.post('/user/delete-content',
+//   uploadController.deleteContent
+// );
+
+router.post('/user/toggle-play-local',
+  userController.togglePlayLocal
 );
 
 

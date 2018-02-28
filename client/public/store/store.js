@@ -30,6 +30,12 @@ var socketOptions = {
 let socket = io(socketOptions);
 let socketIoMiddleware = createSocketIoMiddleware(socket, 'server/');
 
+
+//connection to local socket io server on the device
+//to handle reboots and file uploads
+// let localSocket = io('http://localhost:5555');
+// let localDeviceSocketIoMiddleware = createSocketIoMiddleware(localSocket, 'local/');
+
 export const history = createHistory();
 
 const sagaMiddleware = createSagaMiddleware();
@@ -37,6 +43,7 @@ const sagaMiddleware = createSagaMiddleware();
 const enhancers = compose(
   applyMiddleware(sagaMiddleware),
   applyMiddleware(socketIoMiddleware),
+  // applyMiddleware(localDeviceSocketIoMiddleware),
   applyMiddleware(routerMiddleware(history)),
   window.devToolsExtension ? window.devToolsExtension() : f => f
 );

@@ -9,7 +9,7 @@ const slug = require('slugs');  //used for url friendly slugs (not sure if neede
 const deviceSchema = new mongoose.Schema({
   deviceName: {
     type: String,
-    trim: true,  
+    trim: true,
     required: 'Please enter a device name'
   },
   uuid: {
@@ -33,6 +33,10 @@ const deviceSchema = new mongoose.Schema({
     trim: true,
     required: false
   },
+  streamContent: {
+    type: Boolean,
+    default: false
+  },
   tags: [String],
   currentMedia: String
 });
@@ -50,4 +54,4 @@ deviceSchema.pre('save', function(next){
 
 deviceSchema.plugin(mongodbErrorHandler);
 
-module.exports = mongoose.model('Device', deviceSchema);
+module.exports = mongoose.model('Device', deviceSchema, 'devices');

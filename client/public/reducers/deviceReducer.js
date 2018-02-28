@@ -13,7 +13,8 @@ import {
 } from '../utils/deviceUtils';
 
 const initialState = {
-  deviceCheck: false
+  deviceCheck: false,
+  LOCAL_SERVER_URI: 'http://localhost:5000'
 }
 
 function deviceReducer(state = initialState, action){
